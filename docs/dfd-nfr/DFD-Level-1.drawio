@@ -1,0 +1,157 @@
+<mxfile host="Electron" modified="2026-08-14T23:00:00.000Z" agent="5.0" version="20.0.0" type="device">
+  <diagram id="diag_dfd level_1 _ system architecture decomposition" name="DFD Level-1 - System Architecture Decomposition">
+    <mxGraphModel dx="1000" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="meta_title" value="Project: AI-Powered Expense Analyzer &amp; Budget Assistant&#xa;Module: DFD Level-1 - System Architecture Decomposition&#xa;Prepared by: Priyam Rai" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;spacing=4;" vertex="1" parent="1">
+          <mxGeometry x="10" y="10" width="807" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_bg" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eeeeee;strokeColor=#cccccc;" vertex="1" parent="1">
+          <mxGeometry x="20" y="80" width="160" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_title" value="DFD Legend" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="20" y="85" width="160" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_ent" value="External Entity" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="35" y="115" width="130" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_proc" value="Logical Process" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=9;align=center;" vertex="1" parent="1">
+          <mxGeometry x="35" y="145" width="130" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_store" value="D# Data Store" style="shape=partialRectangle;bottom=0;top=0;left=0;right=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="35" y="177" width="130" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_flow" value="Data Flow Arrow" style="text;html=1;align=center;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="35" y="205" width="130" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="ent_user" value="User" style="whiteSpace=wrap;html=1;fontStyle=1;strokeWidth=2;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="50" y="400" width="110" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ent_admin" value="Administrator" style="whiteSpace=wrap;html=1;fontStyle=1;strokeWidth=2;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="670" y="100" width="110" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p_auth" value="1.0&amp;#xa;User Auth &amp;&amp;#xa;Management" style="ellipse;whiteSpace=wrap;html=1;fontStyle=1;strokeWidth=2;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="220" y="140" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p_exp" value="2.0&amp;#xa;Expense&amp;#xa;Management" style="ellipse;whiteSpace=wrap;html=1;fontStyle=1;strokeWidth=2;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="220" y="260" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p_cat" value="3.0&amp;#xa;Category&amp;#xa;Management" style="ellipse;whiteSpace=wrap;html=1;fontStyle=1;strokeWidth=2;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="450" y="100" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p_budget" value="4.0&amp;#xa;Budget&amp;#xa;Management" style="ellipse;whiteSpace=wrap;html=1;fontStyle=1;strokeWidth=2;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="220" y="380" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p_predict" value="5.0&amp;#xa;Spending Analysis&amp;#xa;&amp; Prediction" style="ellipse;whiteSpace=wrap;html=1;fontStyle=1;strokeWidth=2;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="220" y="500" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p_alert" value="6.0&amp;#xa;Alert / Notification&amp;#xa;Management" style="ellipse;whiteSpace=wrap;html=1;fontStyle=1;strokeWidth=2;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="220" y="620" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p_audit" value="7.0&amp;#xa;Administration&amp;#xa;&amp; Audit" style="ellipse;whiteSpace=wrap;html=1;fontStyle=1;strokeWidth=2;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="450" y="220" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ds_users" value="D1 Users" style="shape=partialRectangle;bottom=0;top=0;left=0;right=1;whiteSpace=wrap;html=1;fontStyle=1;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="140" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ds_categories" value="D2 Categories" style="shape=partialRectangle;bottom=0;top=0;left=0;right=1;whiteSpace=wrap;html=1;fontStyle=1;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="450" y="20" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ds_expenses" value="D3 Expenses" style="shape=partialRectangle;bottom=0;top=0;left=0;right=1;whiteSpace=wrap;html=1;fontStyle=1;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="260" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ds_budgets" value="D4 Budgets" style="shape=partialRectangle;bottom=0;top=0;left=0;right=1;whiteSpace=wrap;html=1;fontStyle=1;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="380" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ds_alerts" value="D5 Alerts" style="shape=partialRectangle;bottom=0;top=0;left=0;right=1;whiteSpace=wrap;html=1;fontStyle=1;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="620" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ds_audit" value="D6 Admin/Audit" style="shape=partialRectangle;bottom=0;top=0;left=0;right=1;whiteSpace=wrap;html=1;fontStyle=1;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="450" y="320" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_0" value="Registration/Login creds" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ent_user" target="p_auth">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_1" value="Valid authentication tokens" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_auth" target="ent_user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_2" value="Create / update user keys" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_auth" target="ds_users">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_3" value="Load name/hash" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ds_users" target="p_auth">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_4" value="Add/Edit Expense logs" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ent_user" target="p_exp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_5" value="Expense log status &amp; receipts" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_exp" target="ent_user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_6" value="Save expense amount / date" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_exp" target="ds_expenses">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_7" value="Read historical records" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ds_expenses" target="p_exp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_8" value="Trigger check (user_id, amount)" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_exp" target="p_budget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_9" value="Configure new system categories" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ent_admin" target="p_cat">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_10" value="Update category items list" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_cat" target="ds_categories">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_11" value="Validate categories" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ds_categories" target="p_exp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_12" value="Define month / year budgets" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ent_user" target="p_budget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_13" value="Budget status updates" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_budget" target="ent_user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_14" value="Save user monthly limits" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_budget" target="ds_budgets">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_15" value="Read budget amounts" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ds_budgets" target="p_budget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_16" value="Verify 80% / 100% threshold" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_budget" target="p_alert">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_17" value="Request AI predictions" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ent_user" target="p_predict">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_18" value="Display forecast breakdowns" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_predict" target="ent_user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_19" value="Fetch historical data (ML input)" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ds_expenses" target="p_predict">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_20" value="Register predictive warnings" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_predict" target="p_alert">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_21" value="Write system notifications" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_alert" target="ds_alerts">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_22" value="Dispatch alerts (80%, 100%, predict)" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_alert" target="ent_user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_23" value="Trigger audit and user checks" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ent_admin" target="p_audit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_24" value="Insert security audit trails" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_audit" target="ds_audit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_25" value="Admin management of users" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_audit" target="ds_users">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_26" value="System health audit updates" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p_audit" target="ent_admin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
