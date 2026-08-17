@@ -13,3 +13,16 @@ An AI-powered application to track expenses, analyze spending patterns, and assi
 | IN26010694 | Abhiudaya Pratap Singh |
 | IN26010937 | Devbrat Yadav |
 | IN26010700 | Priyam Rai |
+
+## Sequence Diagrams
+
+Documentation available in:
+
+* SEQUENCE_DIAGRAMS.md
+
+Covered Flows:
+
+* Add Expense
+* Budget Warning (80% / 100%)
+* Spending Prediction
+
