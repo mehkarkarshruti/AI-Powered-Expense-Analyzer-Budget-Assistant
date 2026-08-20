@@ -3,14 +3,11 @@ using ExpenseAnalyzer.API.DTOs;
 using ExpenseAnalyzer.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
 
 namespace ExpenseAnalyzer.API.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
-    [Authorize]   //every endpoint inside this controller now require a valid JWT
     public class UsersController : ControllerBase
     {
         private readonly AppDbContext _context;  //access to database
@@ -55,60 +52,66 @@ namespace ExpenseAnalyzer.API.Controllers
             return Ok(user);
         }
 
-        [HttpGet("me")]    //API decides who the user is
-        public async Task<ActionResult<UserResponseDto>> GetMyProfile()
+        // POST: api/users   //Create user
+        [HttpPost]
+        public async Task<ActionResult<UserResponseDto>> CreateUser(RegisterUserDto dto)
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);   //retrieves the jwt token
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);  //checks whether the email already exists
 
-            if (userIdClaim == null)
+            if (existingUser != null)
             {
-                return Unauthorized();
-            }
-
-            int userId = int.Parse(userIdClaim.Value);
-
-            var user = await _context.Users
-                .Where(u => u.UserId == userId)
-                .Select(u => new UserResponseDto
-                {
-                    UserId = u.UserId,
-                    Name = u.Name,
-                    Email = u.Email
-                })
-                .FirstOrDefaultAsync();
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(user);
-        }
-
-        [HttpPut("me")]  //secure update endpoint   //user can edit only their profile
-        public async Task<IActionResult> UpdateMyProfile(UpdateUserDto dto)
-        {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-
-            if (userIdClaim == null)
-                return Unauthorized();
-
-            int userId = int.Parse(userIdClaim.Value);
-
-            var user = await _context.Users.FindAsync(userId);
-
-            if (user == null)
-                return NotFound();
-
-            bool emailExists = await _context.Users.AnyAsync(
-                u => u.Email == dto.Email &&
-                     u.UserId != userId);
-
-            if (emailExists)
                 return Conflict(new
                 {
-                    message = "Email already in use."
+                    message = "A user with this email already exists."
                 });
+            }
+
+            var user = new User
+            {
+                Name = dto.Name,
+                Email = dto.Email,
+                PasswordHash = dto.Password
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            var response = new UserResponseDto
+            {
+                UserId = user.UserId,
+                Name = user.Name,
+                Email = user.Email
+            };
+
+            return CreatedAtAction(
+                nameof(GetUser),
+                new { id = user.UserId },
+                response);
+        }
+
+        // PUT: api/users/1   //Update User
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, UpdateUserDto dto)
+        {
+            var user = await _context.Users.FindAsync(id);
+
+            if (user == null)
+            {
+                return NotFound(new
+                {
+                    message = "User Not Found."
+                });
+            }
+
+            var emailExists = await _context.Users.AnyAsync(u => u.Email == dto.Email && u.UserId != id);
+
+            if (emailExists)
+            {
+                return Conflict(new
+                {
+                    message = "Another user already uses this email."
+                });
+            }
 
             user.Name = dto.Name;
             user.Email = dto.Email;
