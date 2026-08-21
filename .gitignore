@@ -1,61 +1,9 @@
-## Ignore Visual Studio / .NET build outputs and temporary files
+# .NET build files
+**/bin/
+**/obj/
 
-# Build results
-[Bb]in/
-[Oo]bj/
-[Ll]og/
-[Ll]ogs/
-[Tt]est[Rr]esults/
-build/
-dist/
-out/
-
-# Visual Studio / VS Code
+# Visual Studio
 .vs/
-.idea/
-.vscode/
-*.user
-*.userosscache
-*.sln.docstates
-*.suo
-*.userprefs
-*.mono
 
-# User-specific files
-*.rsuser
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
-
-# Sensitive files / Environment variables / Secrets
-.env
-.env.*
-*.env
-*.pem
-*.key
-*.pfx
-*.p12
-appsettings.Development.local.json
-appsettings.Local.json
-appsettings.Secrets.json
-appsettings.*.local.json
-secrets.json
-
-# SQLite / Local Databases
-*.db
-*.sqlite
-*.sqlite3
-*.db-shm
-*.db-wal
-
-# OS Generated Files
+# macOS
 .DS_Store
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# NuGet Packages
-*.nupkg
-*.snupkg
-**/packages/
