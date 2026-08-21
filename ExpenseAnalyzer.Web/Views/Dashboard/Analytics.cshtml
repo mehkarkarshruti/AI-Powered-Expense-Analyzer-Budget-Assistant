@@ -1,0 +1,103 @@
+@{
+    ViewData["Title"] = "Analytics";
+}
+
+<div class="dashboard">
+
+    <div class="page-heading">
+        <div>
+            <h1>Analytics</h1>
+            <p>Understand where your money is going.</p>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+
+        <div class="dashboard-card spending-card">
+
+            <div class="section-header">
+                <div>
+                    <h3>Monthly Spending</h3>
+                    <p>August 2026</p>
+                </div>
+            </div>
+
+            <div class="bar-chart">
+                <div class="bar-column"><div class="bar" style="height:45%"></div><span>1</span></div>
+                <div class="bar-column"><div class="bar" style="height:65%"></div><span>5</span></div>
+                <div class="bar-column"><div class="bar" style="height:35%"></div><span>10</span></div>
+                <div class="bar-column"><div class="bar" style="height:80%"></div><span>15</span></div>
+                <div class="bar-column"><div class="bar active" style="height:90%"></div><span>20</span></div>
+                <div class="bar-column"><div class="bar" style="height:55%"></div><span>21</span></div>
+                <div class="bar-column"><div class="bar" style="height:30%"></div><span>25</span></div>
+                <div class="bar-column"><div class="bar" style="height:45%"></div><span>30</span></div>
+            </div>
+
+        </div>
+
+        <div class="dashboard-card">
+
+            <div class="section-header">
+                <div>
+                    <h3>Category Spending</h3>
+                    <p>This month's breakdown</p>
+                </div>
+            </div>
+
+            <div class="category-list">
+
+                <div class="category-row">
+                    <div class="category-name">
+                        <span class="category-dot food"></span>
+                        Food
+                    </div>
+                    <strong>₹4,000</strong>
+                </div>
+
+                <div class="progress">
+                    <div style="width:80%"></div>
+                </div>
+
+                <div class="category-row">
+                    <div class="category-name">
+                        <span class="category-dot travel"></span>
+                        Travel
+                    </div>
+                    <strong>₹2,500</strong>
+                </div>
+
+                <div class="progress">
+                    <div style="width:50%"></div>
+                </div>
+
+                <div class="category-row">
+                    <div class="category-name">
+                        <span class="category-dot shopping"></span>
+                        Shopping
+                    </div>
+                    <strong>₹3,000</strong>
+                </div>
+
+                <div class="progress">
+                    <div style="width:60%"></div>
+                </div>
+
+                <div class="category-row">
+                    <div class="category-name">
+                        <span class="category-dot bills"></span>
+                        Bills
+                    </div>
+                    <strong>₹1,500</strong>
+                </div>
+
+                <div class="progress">
+                    <div style="width:30%"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

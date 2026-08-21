@@ -1,0 +1,263 @@
+@{
+    ViewData["Title"] = "Expenses";
+}
+
+<div class="expense-page">
+
+    <div class="page-heading">
+        <div>
+            <h1>Expenses</h1>
+            <p>Track and manage your daily spending.</p>
+        </div>
+
+        <button class="primary-btn" onclick="openExpenseModal()">
+            + Add Expense
+        </button>
+    </div>
+
+    <!-- Filters -->
+    <div class="expense-toolbar">
+
+        <div class="search-box">
+            🔍
+            <input type="text" id="expenseSearch"
+                   placeholder="Search expenses..."
+                   onkeyup="filterExpenses()" />
+        </div>
+
+        <select id="categoryFilter" onchange="filterExpenses()">
+            <option value="">All Categories</option>
+            <option value="Food">Food</option>
+            <option value="Travel">Travel</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Bills">Bills</option>
+        </select>
+
+        <select>
+            <option>August 2026</option>
+            <option>July 2026</option>
+            <option>June 2026</option>
+        </select>
+
+    </div>
+
+    <!-- Expense Table -->
+    <div class="expense-card">
+
+        <div class="expense-card-header">
+            <div>
+                <h3>Recent Expenses</h3>
+                <p>Your recorded transactions</p>
+            </div>
+
+            <strong id="expenseCount">5 transactions</strong>
+        </div>
+
+        <div class="table-wrapper">
+
+            <table class="expense-table">
+
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="expenseTable">
+
+                    <tr data-category="Food">
+                        <td>21 Aug 2026</td>
+                        <td>
+                            <span class="expense-category food-cat">
+                                🍔 Food
+                            </span>
+                        </td>
+                        <td>Lunch</td>
+                        <td class="amount">₹250</td>
+                        <td><span class="status normal">Normal</span></td>
+                        <td>
+                            <button class="table-btn edit-btn"
+                                    onclick="editExpense(this)">
+                                Edit
+                            </button>
+                            <button class="table-btn delete-btn"
+                                    onclick="deleteExpense(this)">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr data-category="Travel">
+                        <td>20 Aug 2026</td>
+                        <td>
+                            <span class="expense-category travel-cat">
+                                🚕 Travel
+                            </span>
+                        </td>
+                        <td>Uber</td>
+                        <td class="amount">₹180</td>
+                        <td><span class="status normal">Normal</span></td>
+                        <td>
+                            <button class="table-btn edit-btn"
+                                    onclick="editExpense(this)">
+                                Edit
+                            </button>
+                            <button class="table-btn delete-btn"
+                                    onclick="deleteExpense(this)">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr data-category="Shopping">
+                        <td>19 Aug 2026</td>
+                        <td>
+                            <span class="expense-category shopping-cat">
+                                🛍 Shopping
+                            </span>
+                        </td>
+                        <td>Clothes</td>
+                        <td class="amount">₹1,200</td>
+                        <td><span class="status warning">High</span></td>
+                        <td>
+                            <button class="table-btn edit-btn"
+                                    onclick="editExpense(this)">
+                                Edit
+                            </button>
+                            <button class="table-btn delete-btn"
+                                    onclick="deleteExpense(this)">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr data-category="Food">
+                        <td>18 Aug 2026</td>
+                        <td>
+                            <span class="expense-category food-cat">
+                                🍔 Food
+                            </span>
+                        </td>
+                        <td>Dinner</td>
+                        <td class="amount">₹350</td>
+                        <td><span class="status normal">Normal</span></td>
+                        <td>
+                            <button class="table-btn edit-btn"
+                                    onclick="editExpense(this)">
+                                Edit
+                            </button>
+                            <button class="table-btn delete-btn"
+                                    onclick="deleteExpense(this)">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr data-category="Bills">
+                        <td>17 Aug 2026</td>
+                        <td>
+                            <span class="expense-category bills-cat">
+                                🧾 Bills
+                            </span>
+                        </td>
+                        <td>Internet Bill</td>
+                        <td class="amount">₹799</td>
+                        <td><span class="status normal">Normal</span></td>
+                        <td>
+                            <button class="table-btn edit-btn"
+                                    onclick="editExpense(this)">
+                                Edit
+                            </button>
+                            <button class="table-btn delete-btn"
+                                    onclick="deleteExpense(this)">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Add/Edit Expense Modal -->
+
+<div class="expense-modal" id="expenseModal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+            <div>
+                <h2 id="modalTitle">Add Expense</h2>
+                <p>Enter your transaction details.</p>
+            </div>
+
+            <button class="close-btn" onclick="closeExpenseModal()">×</button>
+        </div>
+
+        <form onsubmit="saveExpense(event)">
+
+            <div class="form-group">
+                <label>Amount</label>
+                <input type="number" id="expenseAmount"
+                       placeholder="₹ 0.00"
+                       min="1"
+                       required />
+            </div>
+
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="expenseCategory" required>
+                        <option value="">Select category</option>
+                        <option>Food</option>
+                        <option>Travel</option>
+                        <option>Shopping</option>
+                        <option>Bills</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="expenseDate" required />
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <input type="text" id="expenseDescription"
+                       placeholder="e.g. Lunch, Uber, groceries..." />
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="secondary-btn"
+                        onclick="closeExpenseModal()">
+                    Cancel
+                </button>
+
+                <button type="submit" class="primary-btn">
+                    Save Expense
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/expense.js" asp-append-version="true"></script>
+}

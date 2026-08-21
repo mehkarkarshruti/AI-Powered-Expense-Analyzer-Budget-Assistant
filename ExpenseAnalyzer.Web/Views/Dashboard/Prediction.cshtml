@@ -1,0 +1,69 @@
+@{
+    ViewData["Title"] = "Prediction";
+}
+
+<div class="dashboard">
+
+    <div class="page-heading">
+        <div>
+            <h1>AI Spending Prediction</h1>
+            <p>Forecast your expected monthly spending.</p>
+        </div>
+    </div>
+
+    <div class="summary-grid">
+
+        <div class="summary-card">
+            <div class="card-top">
+                <span>Current Spending</span>
+                <div class="card-icon purple">₹</div>
+            </div>
+            <h2>₹12,450</h2>
+            <p>This month</p>
+        </div>
+
+        <div class="summary-card">
+            <div class="card-top">
+                <span>Predicted Spending</span>
+                <div class="card-icon orange">↗</div>
+            </div>
+            <h2>₹17,800</h2>
+            <p>Expected monthly total</p>
+        </div>
+
+        <div class="summary-card">
+            <div class="card-top">
+                <span>Budget</span>
+                <div class="card-icon blue">₹</div>
+            </div>
+            <h2>₹15,000</h2>
+            <p>Monthly limit</p>
+        </div>
+
+    </div>
+
+    <div class="prediction-card prediction-large">
+
+        <div class="prediction-header">
+            <div class="prediction-icon">🔮</div>
+
+            <div>
+                <h3>Prediction Result</h3>
+                <p>Based on historical and current spending patterns.</p>
+            </div>
+        </div>
+
+        <div class="prediction-value">
+            <span>Expected monthly spending</span>
+            <strong>₹17,800</strong>
+        </div>
+
+        <div class="prediction-warning">
+            ⚠ The predicted spending is
+            <strong>₹2,800 above your budget.</strong>
+            Consider reducing discretionary spending.
+        </div>
+
+    </div>
+
+</div>
