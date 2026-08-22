@@ -16,7 +16,7 @@ An AI-powered application to track expenses, analyze spending patterns, and assi
 
 ---
 
-## ML / Spending Prediction Module (Devbrat)
+## ML / Spending Prediction Module
 
 ### Overview
 The Spending Prediction module uses a user's historical expense data to forecast their expected spending for the current month. It calculates a projected monthly total, compares it against the user's defined monthly budget (if available), and provides early warnings when spending is likely to exceed budget limits.
