@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SpendWise</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">₹</div>
+            <div>
+                <div class="brand-name">SpendWise</div>
+                <small>Expense Analyzer</small>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="/" class="nav-item">
+                <span>🏠</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="/Expense" class="nav-item">
+                <span>💳</span>
+                <span>Expenses</span>
+            </a>
+
+            <a href="/Dashboard/Budget" class="nav-item">
+                <span>💰</span>
+                <span>Budget</span>
+            </a>
+
+            <a href="/Dashboard/Analytics" class="nav-item">
+                <span>📊</span>
+                <span>Analytics</span>
+            </a>
+
+            <a href="/Dashboard/Prediction" class="nav-item">
+                <span>🔮</span>
+                <span>Prediction</span>
+            </a>
+
+            <a href="/Dashboard/Alerts" class="nav-item">
+                <span>🔔</span>
+                <span>Alerts</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="#" class="nav-item">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </a>
+
+            <a href="/Account/Login" class="nav-item logout">
+                <span>🚪</span>
+                <span>Logout</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Top Navbar -->
+        <header class="topbar">
+
+            <div>
+                <h6 class="mb-0">Expense Analyzer</h6>
+                <small>Manage your finances smarter</small>
+            </div>
+
+            <div class="user-area">
+                <button class="notification-btn">🔔</button>
+
+                <div class="user-avatar">
+                    S
+                </div>
+
+                <div class="user-info">
+                    <strong>Account</strong>
+                    <small>Signed in</small>
+                </div>
+            </div>
+
+        </header>
+
+        <!-- Page Content -->
+        <section class="page-content">
+            @RenderBody()
+        </section>
+
+    </main>
+
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+@await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>
