@@ -52,43 +52,6 @@ namespace ExpenseAnalyzer.API.Controllers
             return Ok(user);
         }
 
-        // POST: api/users   //Create user
-        [HttpPost]
-        public async Task<ActionResult<UserResponseDto>> CreateUser(RegisterUserDto dto)
-        {
-            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);  //checks whether the email already exists
-
-            if (existingUser != null)
-            {
-                return Conflict(new
-                {
-                    message = "A user with this email already exists."
-                });
-            }
-
-            var user = new User
-            {
-                Name = dto.Name,
-                Email = dto.Email,
-                PasswordHash = dto.Password
-            };
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            var response = new UserResponseDto
-            {
-                UserId = user.UserId,
-                Name = user.Name,
-                Email = user.Email
-            };
-
-            return CreatedAtAction(
-                nameof(GetUser),
-                new { id = user.UserId },
-                response);
-        }
-
         // PUT: api/users/1   //Update User
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, UpdateUserDto dto)
