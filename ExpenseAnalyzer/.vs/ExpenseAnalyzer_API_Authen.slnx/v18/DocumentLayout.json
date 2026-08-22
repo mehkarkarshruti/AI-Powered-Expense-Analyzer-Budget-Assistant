@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\Hp\\Desktop\\Repo\\mehkarkarshruti\\AI-Powered-Expense-Analyzer-Budget-Assistant\\ExpenseAnalyzer\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E49F784E-16CB-1600-BCB1-AF0CA29C2FAF}|ExpenseAnalyzer.API\\ExpenseAnalyzer.API.csproj|c:\\users\\hp\\desktop\\repo\\mehkarkarshruti\\ai-powered-expense-analyzer-budget-assistant\\expenseanalyzer\\expenseanalyzer.api\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E49F784E-16CB-1600-BCB1-AF0CA29C2FAF}|ExpenseAnalyzer.API\\ExpenseAnalyzer.API.csproj|solutionrelative:expenseanalyzer.api\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E49F784E-16CB-1600-BCB1-AF0CA29C2FAF}|ExpenseAnalyzer.API\\ExpenseAnalyzer.API.csproj|c:\\users\\hp\\desktop\\repo\\mehkarkarshruti\\ai-powered-expense-analyzer-budget-assistant\\expenseanalyzer\\expenseanalyzer.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E49F784E-16CB-1600-BCB1-AF0CA29C2FAF}|ExpenseAnalyzer.API\\ExpenseAnalyzer.API.csproj|solutionrelative:expenseanalyzer.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{E49F784E-16CB-1600-BCB1-AF0CA29C2FAF}|ExpenseAnalyzer.API\\ExpenseAnalyzer.API.csproj|c:\\users\\hp\\desktop\\repo\\mehkarkarshruti\\ai-powered-expense-analyzer-budget-assistant\\expenseanalyzer\\expenseanalyzer.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E49F784E-16CB-1600-BCB1-AF0CA29C2FAF}|ExpenseAnalyzer.API\\ExpenseAnalyzer.API.csproj|solutionrelative:expenseanalyzer.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{E49F784E-16CB-1600-BCB1-AF0CA29C2FAF}|ExpenseAnalyzer.API\\ExpenseAnalyzer.API.csproj|c:\\users\\hp\\desktop\\repo\\mehkarkarshruti\\ai-powered-expense-analyzer-budget-assistant\\expenseanalyzer\\expenseanalyzer.api\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E49F784E-16CB-1600-BCB1-AF0CA29C2FAF}|ExpenseAnalyzer.API\\ExpenseAnalyzer.API.csproj|solutionrelative:expenseanalyzer.api\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{E49F784E-16CB-1600-BCB1-AF0CA29C2FAF}|ExpenseAnalyzer.API\\ExpenseAnalyzer.API.csproj|c:\\users\\hp\\desktop\\repo\\mehkarkarshruti\\ai-powered-expense-analyzer-budget-assistant\\expenseanalyzer\\expenseanalyzer.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{E49F784E-16CB-1600-BCB1-AF0CA29C2FAF}|ExpenseAnalyzer.API\\ExpenseAnalyzer.API.csproj|solutionrelative:expenseanalyzer.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E49F784E-16CB-1600-BCB1-AF0CA29C2FAF}|ExpenseAnalyzer.API\\ExpenseAnalyzer.API.csproj|c:\\users\\hp\\desktop\\repo\\mehkarkarshruti\\ai-powered-expense-analyzer-budget-assistant\\expenseanalyzer\\expenseanalyzer.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E49F784E-16CB-1600-BCB1-AF0CA29C2FAF}|ExpenseAnalyzer.API\\ExpenseAnalyzer.API.csproj|solutionrelative:expenseanalyzer.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E49F784E-16CB-1600-BCB1-AF0CA29C2FAF}|ExpenseAnalyzer.API\\ExpenseAnalyzer.API.csproj|c:\\users\\hp\\desktop\\repo\\mehkarkarshruti\\ai-powered-expense-analyzer-budget-assistant\\expenseanalyzer\\expenseanalyzer.api\\services\\jwtservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -66,32 +66,6 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "C:\\Users\\Hp\\Desktop\\Repo\\mehkarkarshruti\\AI-Powered-Expense-Analyzer-Budget-Assistant\\ExpenseAnalyzer\\ExpenseAnalyzer.API\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "ExpenseAnalyzer.API\\Controllers\\AuthController.cs",
-              "ToolTip": "C:\\Users\\Hp\\Desktop\\Repo\\mehkarkarshruti\\AI-Powered-Expense-Analyzer-Budget-Assistant\\ExpenseAnalyzer\\ExpenseAnalyzer.API\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "ExpenseAnalyzer.API\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADMAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-22T05:57:28.133Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "JwtService.cs",
-              "DocumentMoniker": "C:\\Users\\Hp\\Desktop\\Repo\\mehkarkarshruti\\AI-Powered-Expense-Analyzer-Budget-Assistant\\ExpenseAnalyzer\\ExpenseAnalyzer.API\\Services\\JwtService.cs",
-              "RelativeDocumentMoniker": "ExpenseAnalyzer.API\\Services\\JwtService.cs",
-              "ToolTip": "C:\\Users\\Hp\\Desktop\\Repo\\mehkarkarshruti\\AI-Powered-Expense-Analyzer-Budget-Assistant\\ExpenseAnalyzer\\ExpenseAnalyzer.API\\Services\\JwtService.cs",
-              "RelativeToolTip": "ExpenseAnalyzer.API\\Services\\JwtService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-22T05:48:30.493Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 5,
               "Title": "AuthService.cs",
               "DocumentMoniker": "C:\\Users\\Hp\\Desktop\\Repo\\mehkarkarshruti\\AI-Powered-Expense-Analyzer-Budget-Assistant\\ExpenseAnalyzer\\ExpenseAnalyzer.API\\Services\\AuthService.cs",
@@ -137,13 +111,14 @@
               "RelativeDocumentMoniker": "ExpenseAnalyzer.API\\Models\\User.cs",
               "ToolTip": "C:\\Users\\Hp\\Desktop\\Repo\\mehkarkarshruti\\AI-Powered-Expense-Analyzer-Budget-Assistant\\ExpenseAnalyzer\\ExpenseAnalyzer.API\\Models\\User.cs",
               "RelativeToolTip": "ExpenseAnalyzer.API\\Models\\User.cs",
-              "ViewState": "AgIAAAQAAAAAAAAAAAA2wAoAAAAYAAAAAAAAAA==",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAUwAoAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-19T14:21:36.259Z"
+              "WhenOpened": "2026-08-19T14:21:36.259Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\Hp\\Desktop\\Repo\\mehkarkarshruti\\AI-Powered-Expense-Analyzer-Budget-Assistant\\ExpenseAnalyzer\\ExpenseAnalyzer.API\\appsettings.json",
               "RelativeDocumentMoniker": "ExpenseAnalyzer.API\\appsettings.json",
@@ -156,13 +131,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "UsersController.cs",
               "DocumentMoniker": "C:\\Users\\Hp\\Desktop\\Repo\\mehkarkarshruti\\AI-Powered-Expense-Analyzer-Budget-Assistant\\ExpenseAnalyzer\\ExpenseAnalyzer.API\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "ExpenseAnalyzer.API\\Controllers\\UsersController.cs",
-              "ToolTip": "C:\\Users\\Hp\\Desktop\\Repo\\mehkarkarshruti\\AI-Powered-Expense-Analyzer-Budget-Assistant\\ExpenseAnalyzer\\ExpenseAnalyzer.API\\Controllers\\UsersController.cs",
-              "RelativeToolTip": "ExpenseAnalyzer.API\\Controllers\\UsersController.cs",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAAADUAAAAAAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\Hp\\Desktop\\Repo\\mehkarkarshruti\\AI-Powered-Expense-Analyzer-Budget-Assistant\\ExpenseAnalyzer\\ExpenseAnalyzer.API\\Controllers\\UsersController.cs*",
+              "RelativeToolTip": "ExpenseAnalyzer.API\\Controllers\\UsersController.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAHEAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-19T14:53:04.13Z",
               "EditorCaption": ""
@@ -177,19 +152,46 @@
               "RelativeToolTip": "ExpenseAnalyzer.API\\DTOs\\UserResponseDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAA5AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-19T14:48:49.179Z"
+              "WhenOpened": "2026-08-19T14:48:49.179Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Hp\\Desktop\\Repo\\mehkarkarshruti\\AI-Powered-Expense-Analyzer-Budget-Assistant\\ExpenseAnalyzer\\ExpenseAnalyzer.API\\Program.cs",
               "RelativeDocumentMoniker": "ExpenseAnalyzer.API\\Program.cs",
               "ToolTip": "C:\\Users\\Hp\\Desktop\\Repo\\mehkarkarshruti\\AI-Powered-Expense-Analyzer-Budget-Assistant\\ExpenseAnalyzer\\ExpenseAnalyzer.API\\Program.cs",
               "RelativeToolTip": "ExpenseAnalyzer.API\\Program.cs",
-              "ViewState": "AgIAACoAAAAAAAAAAAAUwEEAAABIAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEEAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-19T14:14:04.81Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "JwtService.cs",
+              "DocumentMoniker": "C:\\Users\\Hp\\Desktop\\Repo\\mehkarkarshruti\\AI-Powered-Expense-Analyzer-Budget-Assistant\\ExpenseAnalyzer\\ExpenseAnalyzer.API\\Services\\JwtService.cs",
+              "RelativeDocumentMoniker": "ExpenseAnalyzer.API\\Services\\JwtService.cs",
+              "ToolTip": "C:\\Users\\Hp\\Desktop\\Repo\\mehkarkarshruti\\AI-Powered-Expense-Analyzer-Budget-Assistant\\ExpenseAnalyzer\\ExpenseAnalyzer.API\\Services\\JwtService.cs",
+              "RelativeToolTip": "ExpenseAnalyzer.API\\Services\\JwtService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-22T05:48:30.493Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\Hp\\Desktop\\Repo\\mehkarkarshruti\\AI-Powered-Expense-Analyzer-Budget-Assistant\\ExpenseAnalyzer\\ExpenseAnalyzer.API\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "ExpenseAnalyzer.API\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\Hp\\Desktop\\Repo\\mehkarkarshruti\\AI-Powered-Expense-Analyzer-Budget-Assistant\\ExpenseAnalyzer\\ExpenseAnalyzer.API\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "ExpenseAnalyzer.API\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-22T05:57:28.133Z",
               "EditorCaption": ""
             },
             {
@@ -202,7 +204,8 @@
               "RelativeToolTip": "ExpenseAnalyzer.API\\DTOs\\UpdateUserDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAABUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-19T14:50:19.318Z"
+              "WhenOpened": "2026-08-19T14:50:19.318Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -227,7 +230,8 @@
               "RelativeToolTip": "ExpenseAnalyzer.API\\Data\\AppDbContext.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAABxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-19T14:25:29.293Z"
+              "WhenOpened": "2026-08-19T14:25:29.293Z",
+              "EditorCaption": ""
             }
           ]
         }
