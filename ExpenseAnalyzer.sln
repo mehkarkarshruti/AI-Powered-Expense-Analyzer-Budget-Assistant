@@ -12,10 +12,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseAnalyzer.API", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseAnalyzer.Tests", "tests\ExpenseAnalyzer.Tests\ExpenseAnalyzer.Tests.csproj", "{99887766-5544-3322-1100-FFEEDDCCBBAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseAnalyzer.UnitTests", "tests\ExpenseAnalyzer.UnitTests\ExpenseAnalyzer.UnitTests.csproj", "{77889900-1122-3344-5566-66778899AABB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseAnalyzer.IntegrationTests", "tests\ExpenseAnalyzer.IntegrationTests\ExpenseAnalyzer.IntegrationTests.csproj", "{55667788-9900-AABB-CCDD-EEFFAABBCCDD}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,13 +38,5 @@ Global
 		{99887766-5544-3322-1100-FFEEDDCCBBAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99887766-5544-3322-1100-FFEEDDCCBBAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99887766-5544-3322-1100-FFEEDDCCBBAA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{77889900-1122-3344-5566-66778899AABB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{77889900-1122-3344-5566-66778899AABB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{77889900-1122-3344-5566-66778899AABB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{77889900-1122-3344-5566-66778899AABB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{55667788-9900-AABB-CCDD-EEFFAABBCCDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{55667788-9900-AABB-CCDD-EEFFAABBCCDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{55667788-9900-AABB-CCDD-EEFFAABBCCDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{55667788-9900-AABB-CCDD-EEFFAABBCCDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

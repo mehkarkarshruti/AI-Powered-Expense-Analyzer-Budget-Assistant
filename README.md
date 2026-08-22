@@ -1,22 +1,6 @@
 # AI-Powered Expense Analyzer & Budget Assistant
 
-An AI-powered application to track expenses, analyze spending patterns, and assist with budget management.
-
-## Group 13
-
-| Application No. | Name |
-|---|---|
-| IN26011653 | Gitanshi Singh |
-| IN26011650 | Samiksha Tiwari |
-| IN26009878 | Shruti Mehkarkar |
-| IN26011621 | Viya Sharma |
-| IN26010694 | Abhiudaya Pratap Singh |
-| IN26010937 | Devbrat Yadav |
-| IN26010700 | Priyam Rai |
-
----
-
-## ML / Spending Prediction Module
+## ML / Spending Prediction Module (Devbrat)
 
 ### Overview
 The Spending Prediction module uses a user's historical expense data to forecast their expected spending for the current month. It calculates a projected monthly total, compares it against the user's defined monthly budget (if available), and provides early warnings when spending is likely to exceed budget limits.
@@ -79,15 +63,3 @@ $$\text{Predicted Spending} = \max\left(\frac{\text{Current Spent So Far}}{\text
 ### Limitations
 - Predictions become significantly more accurate after a user records at least 2-3 months of consistent transaction history.
 - Sudden, non-recurring high-value expenses (e.g. medical emergencies) in a single month may temporarily elevate projected spending until more days elapse in the month.
-
----
-
-## Sequence Diagrams
-
-Documentation available in:
-* `SEQUENCE_DIAGRAMS.md`
-
-Covered Flows:
-* Add Expense
-* Budget Warning (80% / 100%)
-* Spending Prediction
