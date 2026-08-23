@@ -1,4 +1,5 @@
 using ExpenseAnalyzer.API.Data;
+using ExpenseAnalyzer.API.Repositories;
 using ExpenseAnalyzer.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,19 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Custom Services
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<JwtService>();
+
+// Repositories
+builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
+builder.Services.AddScoped<IBudgetRepository, BudgetRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IAlertRepository, AlertRepository>();
+
+// Business Services & HTTP Clients
+builder.Services.AddScoped<IBudgetService, BudgetService>();
+builder.Services.AddHttpClient("PredictionAPI", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["PredictionApiUrl"] ?? "http://localhost:5240/api/");
+});
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"];
@@ -49,6 +63,22 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// Seed Database automatically on startup
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<AppDbContext>();
+        await DbInitializer.SeedAsync(context);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while seeding the database.");
+    }
+}
 
 if (app.Environment.IsDevelopment())
 {
