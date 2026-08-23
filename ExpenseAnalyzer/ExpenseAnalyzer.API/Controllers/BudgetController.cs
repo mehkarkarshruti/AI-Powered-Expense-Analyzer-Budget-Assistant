@@ -18,14 +18,14 @@ namespace ExpenseAnalyzer.API.Controllers
             _budgetService = budgetService;
         }
 
-        private int GetUserId()
+        private int? GetUserId()
         {
             var idClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (idClaim != null && int.TryParse(idClaim.Value, out int userId))
             {
                 return userId;
             }
-            return 1; // Fallback to 1 for testing if claim is absent
+            return null;
         }
 
         [HttpPost]
@@ -33,19 +33,23 @@ namespace ExpenseAnalyzer.API.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            int userId = GetUserId();
-            var result = await _budgetService.SetBudgetAsync(userId, dto);
+            int? userId = GetUserId();
+            if (userId == null) return Unauthorized();
+
+            var result = await _budgetService.SetBudgetAsync(userId.Value, dto);
             return Ok(result);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetBudget([FromQuery] byte? month, [FromQuery] short? year)
         {
-            int userId = GetUserId();
+            int? userId = GetUserId();
+            if (userId == null) return Unauthorized();
+
             var targetMonth = month ?? (byte)DateTime.UtcNow.Month;
             var targetYear = year ?? (short)DateTime.UtcNow.Year;
 
-            var budget = await _budgetService.GetBudgetAsync(userId, targetMonth, targetYear);
+            var budget = await _budgetService.GetBudgetAsync(userId.Value, targetMonth, targetYear);
             if (budget == null) return NotFound(new { message = "Budget not found for this month." });
 
             return Ok(budget);
@@ -54,8 +58,10 @@ namespace ExpenseAnalyzer.API.Controllers
         [HttpGet("status")]
         public async Task<IActionResult> GetBudgetStatusAndAlerts()
         {
-            int userId = GetUserId();
-            var status = await _budgetService.GetBudgetStatusAndCheckAlertsAsync(userId);
+            int? userId = GetUserId();
+            if (userId == null) return Unauthorized();
+
+            var status = await _budgetService.GetBudgetStatusAndCheckAlertsAsync(userId.Value);
             return Ok(status);
         }
     }
