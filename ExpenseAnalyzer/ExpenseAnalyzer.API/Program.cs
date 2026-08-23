@@ -26,6 +26,13 @@ builder.Services.AddScoped<IBudgetRepository, BudgetRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 
+// Business Services & HTTP Clients
+builder.Services.AddScoped<IBudgetService, BudgetService>();
+builder.Services.AddHttpClient("PredictionAPI", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["PredictionApiUrl"] ?? "http://localhost:5240/api/");
+});
+
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"];
 
