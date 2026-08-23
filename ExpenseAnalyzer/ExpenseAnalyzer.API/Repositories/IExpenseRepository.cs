@@ -11,6 +11,6 @@ namespace ExpenseAnalyzer.API.Repositories
         Task<Expense> AddAsync(Expense expense);
         Task UpdateAsync(Expense expense);
         Task DeleteAsync(Expense expense);
-        Task<decimal> GetTotalSpentAsync(int userId, int month, int year);
+        Task<decimal> GetTotalSpentAsync(int userId, int? categoryId, int month, int year);
     }
 }
