@@ -1,0 +1,73 @@
+<mxfile host="Electron" modified="2026-08-14T23:00:00.000Z" agent="5.0" version="20.0.0" type="device">
+  <diagram id="diag_dfd level_0 _ context diagram" name="DFD Level-0 - Context Diagram">
+    <mxGraphModel dx="1000" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="meta_title" value="Project: AI-Powered Expense Analyzer &amp; Budget Assistant&#xa;Module: DFD Level-0 - Context Diagram&#xa;Prepared by: Priyam Rai" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=14;spacing=4;" vertex="1" parent="1">
+          <mxGeometry x="10" y="10" width="807" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_bg" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eeeeee;strokeColor=#cccccc;" vertex="1" parent="1">
+          <mxGeometry x="20" y="80" width="160" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_title" value="DFD Legend" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="20" y="85" width="160" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_ent" value="External Entity" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="35" y="115" width="130" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_proc" value="Logical Process" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=9;align=center;" vertex="1" parent="1">
+          <mxGeometry x="35" y="145" width="130" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_store" value="D# Data Store" style="shape=partialRectangle;bottom=0;top=0;left=0;right=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="35" y="177" width="130" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_flow" value="Data Flow Arrow" style="text;html=1;align=center;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="35" y="205" width="130" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="ent_user" value="User&amp;#xa;(Priyam / Customer)" style="whiteSpace=wrap;html=1;fontStyle=1;strokeWidth=2;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="80" y="360" width="130" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ent_admin" value="Administrator&amp;#xa;(System Admin)" style="whiteSpace=wrap;html=1;fontStyle=1;strokeWidth=2;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="620" y="360" width="130" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="proc_sys" value="0.0&amp;#xa;&amp;#xa;AI-Powered Expense&amp;#xa;Analyzer &amp; Budget&amp;#xa;Assistant&amp;#xa;(Main System Core)" style="ellipse;whiteSpace=wrap;html=1;fontStyle=1;strokeWidth=2;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="310" y="320" width="200" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_0" value="Login / Register info" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ent_user" target="proc_sys">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_1" value="Add/Modify Expense data&amp;#xa;(Amount, Date, Desc)" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ent_user" target="proc_sys">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_2" value="Monthly Budget Limits&amp;#xa;(Month, Year, Amount)" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ent_user" target="proc_sys">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_3" value="Requests Forecast &amp; Analysis" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ent_user" target="proc_sys">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_4" value="Session Tokens / Auth Status" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="proc_sys" target="ent_user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_5" value="Expense report / breaks &amp; plots" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="proc_sys" target="ent_user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_6" value="Budget warnings&amp;#xa;(80% &amp; 100% Breaches)" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="proc_sys" target="ent_user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_7" value="AI predictions / forecasts" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="proc_sys" target="ent_user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_8" value="Manage Config &amp; Categories&amp;#xa;(Food, Travel, Rent, etc.)" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ent_admin" target="proc_sys">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_9" value="User Management / Moderation" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ent_admin" target="proc_sys">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_10" value="Audit logs &amp; System security met" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#333333;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="proc_sys" target="ent_admin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

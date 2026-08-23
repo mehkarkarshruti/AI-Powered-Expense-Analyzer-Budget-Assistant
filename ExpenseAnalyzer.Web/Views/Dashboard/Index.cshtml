@@ -1,0 +1,266 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="dashboard">
+
+    <div class="page-heading">
+        <div>
+            <h1>Dashboard</h1>
+            <p>Good evening, Samiksha 👋 Here's your spending overview.</p>
+        </div>
+
+        <a href="/Expense" class="primary-btn">+ Add Expense</a>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="summary-grid">
+
+        <div class="summary-card">
+            <div class="card-top">
+                <span>Total Spent</span>
+                <div class="card-icon purple">₹</div>
+            </div>
+            <h2 id="totalSpent">₹12,450</h2>
+            <p>This month</p>
+        </div>
+
+        <div class="summary-card">
+            <div class="card-top">
+                <span>Monthly Budget</span>
+                <div class="card-icon blue">₹</div>
+            </div>
+            <h2 id="budgetAmount">₹15,000</h2>
+            <p><button class="mini-link" onclick="openBudgetModal()">Update budget</button></p>
+        </div>
+
+        <div class="summary-card">
+            <div class="card-top">
+                <span>Remaining</span>
+                <div class="card-icon green">✓</div>
+            </div>
+            <h2 id="remainingAmount">₹2,550</h2>
+            <p id="budgetPercentage">17% remaining</p>
+        </div>
+
+        <div class="summary-card">
+            <div class="card-top">
+                <span>Daily Average</span>
+                <div class="card-icon orange">↗</div>
+            </div>
+            <h2 id="dailyAverage">₹591</h2>
+            <p>Average per day</p>
+        </div>
+
+    </div>
+
+    <!-- ALERT -->
+    <div id="budgetAlert" class="dashboard-alert warning-alert">
+        <div class="dashboard-alert-icon">!</div>
+        <div>
+            <strong>Budget Warning</strong>
+            <p id="budgetAlertText">
+                You have used 83% of your monthly budget.
+            </p>
+        </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="dashboard-grid">
+
+        <div class="dashboard-card spending-card">
+
+            <div class="section-header">
+                <div>
+                    <h3>Spending Overview</h3>
+                    <p>Daily spending this month</p>
+                </div>
+
+                <select>
+                    <option>August 2026</option>
+                    <option>July 2026</option>
+                    <option>June 2026</option>
+                </select>
+            </div>
+
+            <div class="bar-chart">
+                <div class="bar-column"><div class="bar" style="height:45%"></div><span>1</span></div>
+                <div class="bar-column"><div class="bar" style="height:65%"></div><span>5</span></div>
+                <div class="bar-column"><div class="bar" style="height:35%"></div><span>10</span></div>
+                <div class="bar-column"><div class="bar" style="height:80%"></div><span>15</span></div>
+                <div class="bar-column"><div class="bar active" style="height:90%"></div><span>20</span></div>
+                <div class="bar-column"><div class="bar" style="height:55%"></div><span>21</span></div>
+                <div class="bar-column"><div class="bar" style="height:30%"></div><span>25</span></div>
+                <div class="bar-column"><div class="bar" style="height:45%"></div><span>30</span></div>
+            </div>
+
+        </div>
+
+        <!-- CATEGORY -->
+        <div class="dashboard-card">
+
+            <div class="section-header">
+                <div>
+                    <h3>Category Breakdown</h3>
+                    <p>Where your money goes</p>
+                </div>
+            </div>
+
+            <div class="category-list">
+
+                <div class="category-row">
+                    <div class="category-name">
+                        <span class="category-dot food"></span>
+                        Food
+                    </div>
+                    <strong>₹4,000</strong>
+                </div>
+                <div class="progress"><div style="width:80%"></div></div>
+
+                <div class="category-row">
+                    <div class="category-name">
+                        <span class="category-dot travel"></span>
+                        Travel
+                    </div>
+                    <strong>₹2,500</strong>
+                </div>
+                <div class="progress"><div style="width:50%"></div></div>
+
+                <div class="category-row">
+                    <div class="category-name">
+                        <span class="category-dot shopping"></span>
+                        Shopping
+                    </div>
+                    <strong>₹3,000</strong>
+                </div>
+                <div class="progress"><div style="width:60%"></div></div>
+
+                <div class="category-row">
+                    <div class="category-name">
+                        <span class="category-dot bills"></span>
+                        Bills
+                    </div>
+                    <strong>₹1,500</strong>
+                </div>
+                <div class="progress"><div style="width:30%"></div></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- AI + BUDGET -->
+    <div class="bottom-grid">
+
+        <div class="prediction-card">
+
+            <div class="prediction-header">
+                <div class="prediction-icon">🔮</div>
+
+                <div>
+                    <h3>AI Spending Prediction</h3>
+                    <p>Based on your current spending pattern</p>
+                </div>
+            </div>
+
+            <div class="prediction-value">
+                <span>Expected monthly spending</span>
+                <strong>₹17,800</strong>
+            </div>
+
+            <div class="prediction-warning">
+                ⚠ You may exceed your current budget by
+                <strong id="predictionDifference">₹2,800</strong>.
+            </div>
+
+        </div>
+
+        <div class="alert-card">
+
+            <div class="alert-header">
+                <div class="alert-icon">!</div>
+
+                <div>
+                    <h3>Budget Progress</h3>
+                    <p>Track your monthly spending limit.</p>
+                </div>
+            </div>
+
+            <div class="budget-progress">
+                <div id="budgetProgress" style="width:83%"></div>
+            </div>
+
+            <div class="budget-labels">
+                <span id="spentLabel">₹12,450 spent</span>
+                <span id="budgetLabel">₹15,000 budget</span>
+            </div>
+
+            <button class="budget-update-btn" onclick="openBudgetModal()">
+                Update Monthly Budget
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- BUDGET MODAL -->
+
+<div class="expense-modal" id="budgetModal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>Update Budget</h2>
+                <p>Set your monthly spending limit.</p>
+            </div>
+
+            <button class="close-btn" onclick="closeBudgetModal()">×</button>
+
+        </div>
+
+        <form onsubmit="updateBudget(event)">
+
+            <div class="form-group">
+
+                <label>Monthly Budget</label>
+
+                <input
+                    type="number"
+                    id="newBudget"
+                    min="1"
+                    placeholder="Enter amount"
+                    required />
+
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="secondary-btn"
+                    onclick="closeBudgetModal()">
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="primary-btn">
+                    Save Budget
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/dashboard.js" asp-append-version="true"></script>
+}

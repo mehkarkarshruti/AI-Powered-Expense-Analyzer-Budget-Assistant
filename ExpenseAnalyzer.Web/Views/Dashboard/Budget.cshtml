@@ -1,0 +1,78 @@
+@{
+    ViewData["Title"] = "Budget";
+}
+
+<div class="dashboard">
+
+    <div class="page-heading">
+        <div>
+            <h1>Budget</h1>
+            <p>Manage your monthly spending limit.</p>
+        </div>
+    </div>
+
+    <div class="summary-grid">
+
+        <div class="summary-card">
+            <div class="card-top">
+                <span>Monthly Budget</span>
+                <div class="card-icon blue">₹</div>
+            </div>
+            <h2>₹15,000</h2>
+            <p>Current month</p>
+        </div>
+
+        <div class="summary-card">
+            <div class="card-top">
+                <span>Total Spent</span>
+                <div class="card-icon purple">₹</div>
+            </div>
+            <h2>₹12,450</h2>
+            <p>83% of budget</p>
+        </div>
+
+        <div class="summary-card">
+            <div class="card-top">
+                <span>Remaining</span>
+                <div class="card-icon green">✓</div>
+            </div>
+            <h2>₹2,550</h2>
+            <p>Available to spend</p>
+        </div>
+
+    </div>
+
+    <div class="dashboard-card budget-page-card">
+
+        <div class="section-header">
+            <div>
+                <h3>Monthly Budget Progress</h3>
+                <p>August 2026</p>
+            </div>
+        </div>
+
+        <div class="budget-progress large-progress">
+            <div style="width:83%"></div>
+        </div>
+
+        <div class="budget-labels">
+            <span>₹12,450 spent</span>
+            <span>₹15,000 budget</span>
+        </div>
+
+        <div class="dashboard-alert warning-alert budget-page-alert">
+            <div class="dashboard-alert-icon">!</div>
+            <div>
+                <strong>You're approaching your budget limit.</strong>
+                <p>You have used 83% of your monthly budget.</p>
+            </div>
+        </div>
+
+        <button class="primary-btn"
+                onclick="alert('Budget update will be connected to the Budget API.')">
+            Update Monthly Budget
+        </button>
+
+    </div>
+
+</div>
