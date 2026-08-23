@@ -2,6 +2,7 @@ using ExpenseAnalyzer.Core.Entities;
 using ExpenseAnalyzer.Core.Interfaces;
 using ExpenseAnalyzer.Infrastructure.Data;
 using ExpenseAnalyzer.ML;
+using ExpenseAnalyzer.API.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Dependency Injection Registration for Devbrat's Machine Learning & Prediction Module
 builder.Services.AddScoped<IPredictionEngine, PredictionService>();
+
+// Dependency Injection Registration for Analytics Module
+builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
 var app = builder.Build();
 
