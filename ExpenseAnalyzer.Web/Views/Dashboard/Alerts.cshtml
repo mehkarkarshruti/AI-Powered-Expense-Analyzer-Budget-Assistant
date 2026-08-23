@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"] = "Alerts";
+    ViewData["Title"] = "Alert Notifications";
 }
 
 <div class="dashboard">
@@ -7,47 +7,85 @@
     <div class="page-heading">
         <div>
             <h1>Alerts</h1>
-            <p>Important notifications about your spending.</p>
+            <p>Important notifications about your spending thresholds.</p>
         </div>
     </div>
 
-    <div class="alert-list">
-
-        <div class="dashboard-alert warning-alert">
-            <div class="dashboard-alert-icon">!</div>
-
-            <div>
-                <strong>80% Budget Warning</strong>
-                <p>
-                    You have used 83% of your monthly budget.
-                    ₹2,550 remains.
-                </p>
-            </div>
-        </div>
-
-        <div class="dashboard-alert danger-alert">
-            <div class="dashboard-alert-icon">!</div>
-
-            <div>
-                <strong>Prediction Warning</strong>
-                <p>
-                    Your predicted monthly spending is ₹17,800,
-                    which is above your ₹15,000 budget.
-                </p>
-            </div>
-        </div>
-
-        <div class="dashboard-alert success-alert">
-            <div class="dashboard-alert-icon">✓</div>
-
-            <div>
-                <strong>Expense Tracking Active</strong>
-                <p>
-                    Your expenses are being tracked for August 2026.
-                </p>
-            </div>
-        </div>
-
+    <div class="alert-list" id="alertsContainer">
+        <p>Loading alerts...</p>
     </div>
 
 </div>
+
+@section Scripts {
+    <script>
+        function loadAlerts() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                document.getElementById('alertsContainer').innerHTML = "<p>Please login to view alerts.</p>";
+                return;
+            }
+
+            fetch('https://localhost:7198/api/Alerts/unread', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            })
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('alertsContainer');
+                container.innerHTML = '';
+                
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="dashboard-alert success-alert"><div class="dashboard-alert-icon">✓</div><div><strong>All good!</strong><p>You have no new alerts.</p></div></div>';
+                    return;
+                }
+
+                data.forEach(alert => {
+                    let alertClass = 'warning-alert';
+                    let icon = '!';
+                    let title = 'Budget Warning';
+                    
+                    if (alert.alertType.includes('100')) {
+                        alertClass = 'danger-alert';
+                        title = 'Budget Exceeded';
+                    } else if (alert.alertType.includes('PREDICTIVE')) {
+                        alertClass = 'warning-alert'; // or some info style
+                        title = 'Prediction Warning';
+                    }
+
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = `dashboard-alert ${alertClass}`;
+                    
+                    alertDiv.innerHTML = `
+                        <div class="dashboard-alert-icon">${icon}</div>
+                        <div style="flex-grow: 1;">
+                            <strong>${title}</strong>
+                            <p>${alert.message}</p>
+                        </div>
+                        <button class="primary-btn" style="padding: 5px 10px; font-size: 0.8rem;" onclick="markRead(${alert.alertId})">Mark Read</button>
+                    `;
+                    container.appendChild(alertDiv);
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('alertsContainer').innerHTML = "<p>Failed to load alerts.</p>";
+            });
+        }
+
+        window.markRead = function(alertId) {
+            const token = localStorage.getItem('token');
+            fetch(`https://localhost:7198/api/Alerts/${alertId}/read`, {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + token }
+            })
+            .then(res => {
+                if (res.ok) {
+                    loadAlerts();
+                }
+            })
+            .catch(err => console.error(err));
+        };
+
+        loadAlerts();
+    </script>
+}
