@@ -20,7 +20,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<CategoryResponse>>> GetCategories()
+    public async Task<ActionResult<IEnumerable<CategoryResponseDto>>> GetCategories()
     {
         var categories = await _categoryRepository.GetAllActiveAsync();
         return Ok(categories.Select(c => c.ToResponse()));
@@ -28,7 +28,7 @@ public class CategoriesController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "admin")]
-    public async Task<ActionResult<CategoryResponse>> CreateCategory(CreateCategoryRequest request)
+    public async Task<ActionResult<CategoryResponseDto>> CreateCategory(CreateCategoryDto request)
     {
         var name = request.Name.Trim();
 

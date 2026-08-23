@@ -22,7 +22,7 @@ public class ExpensesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ExpenseResponse>>> GetExpenses()
+    public async Task<ActionResult<IEnumerable<ExpenseResponseDto>>> GetExpenses()
     {
         var userId = User.GetUserId();
         if (userId is null)
@@ -36,7 +36,7 @@ public class ExpensesController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<ExpenseResponse>> GetExpense(int id)
+    public async Task<ActionResult<ExpenseResponseDto>> GetExpense(int id)
     {
         var userId = User.GetUserId();
         if (userId is null)
@@ -54,7 +54,7 @@ public class ExpensesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<ExpenseResponse>> CreateExpense(CreateExpenseRequest request)
+    public async Task<ActionResult<ExpenseResponseDto>> CreateExpense(CreateExpenseDto request)
     {
         var userId = User.GetUserId();
         if (userId is null)
@@ -77,7 +77,7 @@ public class ExpensesController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<ExpenseResponse>> UpdateExpense(int id, UpdateExpenseRequest request)
+    public async Task<ActionResult<ExpenseResponseDto>> UpdateExpense(int id, UpdateExpenseDto request)
     {
         var userId = User.GetUserId();
         if (userId is null)
