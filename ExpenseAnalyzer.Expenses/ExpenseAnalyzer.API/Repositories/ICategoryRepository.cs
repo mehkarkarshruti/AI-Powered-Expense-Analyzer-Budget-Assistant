@@ -1,6 +1,6 @@
-using ExpenseAnalyzer.Core.Entities;
+using ExpenseAnalyzer.API.Models;
 
-namespace ExpenseAnalyzer.Core.Interfaces;
+namespace ExpenseAnalyzer.API.Repositories;
 
 public interface ICategoryRepository
 {

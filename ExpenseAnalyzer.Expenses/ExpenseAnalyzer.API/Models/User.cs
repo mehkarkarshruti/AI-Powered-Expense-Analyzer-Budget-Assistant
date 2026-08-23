@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ExpenseAnalyzer.Core.Entities;
+namespace ExpenseAnalyzer.API.Models;
 
 public class User
 {

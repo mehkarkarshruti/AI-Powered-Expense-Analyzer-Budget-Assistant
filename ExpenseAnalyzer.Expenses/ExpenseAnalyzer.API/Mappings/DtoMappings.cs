@@ -1,13 +1,13 @@
-using ExpenseAnalyzer.Core.DTOs;
-using ExpenseAnalyzer.Core.Entities;
+using ExpenseAnalyzer.API.DTOs;
+using ExpenseAnalyzer.API.Models;
 
-namespace ExpenseAnalyzer.Core.Mappings;
+namespace ExpenseAnalyzer.API.Mappings;
 
 public static class DtoMappings
 {
-    public static ExpenseResponseDto ToResponse(this Expense expense)
+    public static ExpenseResponse ToResponse(this Expense expense)
     {
-        return new ExpenseResponseDto
+        return new ExpenseResponse
         {
             ExpenseId = expense.ExpenseId,
             UserId = expense.UserId,
@@ -20,9 +20,9 @@ public static class DtoMappings
         };
     }
 
-    public static CategoryResponseDto ToResponse(this Category category)
+    public static CategoryResponse ToResponse(this Category category)
     {
-        return new CategoryResponseDto
+        return new CategoryResponse
         {
             CategoryId = category.CategoryId,
             Name = category.Name,
@@ -30,7 +30,7 @@ public static class DtoMappings
         };
     }
 
-    public static Expense ToEntity(this CreateExpenseDto request, int userId)
+    public static Expense ToEntity(this CreateExpenseRequest request, int userId)
     {
         var now = DateTime.UtcNow;
 

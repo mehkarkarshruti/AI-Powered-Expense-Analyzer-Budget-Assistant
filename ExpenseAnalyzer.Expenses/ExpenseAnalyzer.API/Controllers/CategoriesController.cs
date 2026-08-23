@@ -1,7 +1,7 @@
-using ExpenseAnalyzer.Core.DTOs;
-using ExpenseAnalyzer.Core.Entities;
-using ExpenseAnalyzer.Core.Interfaces;
-using ExpenseAnalyzer.Core.Mappings;
+using ExpenseAnalyzer.API.DTOs;
+using ExpenseAnalyzer.API.Models;
+using ExpenseAnalyzer.API.Repositories;
+using ExpenseAnalyzer.API.Mappings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +20,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<CategoryResponseDto>>> GetCategories()
+    public async Task<ActionResult<IEnumerable<CategoryResponse>>> GetCategories()
     {
         var categories = await _categoryRepository.GetAllActiveAsync();
         return Ok(categories.Select(c => c.ToResponse()));
@@ -28,7 +28,7 @@ public class CategoriesController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "admin")]
-    public async Task<ActionResult<CategoryResponseDto>> CreateCategory(CreateCategoryDto request)
+    public async Task<ActionResult<CategoryResponse>> CreateCategory(CreateCategoryRequest request)
     {
         var name = request.Name.Trim();
 

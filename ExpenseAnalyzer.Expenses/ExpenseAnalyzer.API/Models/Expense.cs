@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ExpenseAnalyzer.Core.Entities;
+namespace ExpenseAnalyzer.API.Models;
 
 public class Expense
 {

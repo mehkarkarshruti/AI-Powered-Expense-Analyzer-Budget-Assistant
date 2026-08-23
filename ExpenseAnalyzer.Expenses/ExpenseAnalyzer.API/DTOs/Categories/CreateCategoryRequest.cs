@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ExpenseAnalyzer.Core.DTOs;
+namespace ExpenseAnalyzer.API.DTOs;
 
-public class CreateCategoryDto
+public class CreateCategoryRequest
 {
     [Required(ErrorMessage = "Category name is required.")]
     [MaxLength(50, ErrorMessage = "Category name cannot exceed 50 characters.")]

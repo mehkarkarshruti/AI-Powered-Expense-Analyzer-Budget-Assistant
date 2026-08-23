@@ -1,6 +1,6 @@
-namespace ExpenseAnalyzer.Core.DTOs;
+namespace ExpenseAnalyzer.API.DTOs;
 
-public class CategoryResponseDto
+public class CategoryResponse
 {
     public int CategoryId { get; set; }
     public string Name { get; set; } = string.Empty;

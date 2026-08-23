@@ -14,11 +14,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.11" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ExpenseAnalyzer.Core\ExpenseAnalyzer.Core.csproj" />
-    <ProjectReference Include="..\ExpenseAnalyzer.Infrastructure\ExpenseAnalyzer.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

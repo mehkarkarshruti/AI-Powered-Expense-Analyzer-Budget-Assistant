@@ -1,9 +1,8 @@
-using ExpenseAnalyzer.Core.Entities;
-using ExpenseAnalyzer.Core.Interfaces;
-using ExpenseAnalyzer.Infrastructure.Data;
+using ExpenseAnalyzer.API.Models;
+using ExpenseAnalyzer.API.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace ExpenseAnalyzer.Infrastructure.Repositories;
+namespace ExpenseAnalyzer.API.Repositories;
 
 public class CategoryRepository : ICategoryRepository
 {

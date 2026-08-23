@@ -1,9 +1,8 @@
 ﻿using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
-using ExpenseAnalyzer.Core.Interfaces;
-using ExpenseAnalyzer.Infrastructure.Data;
-using ExpenseAnalyzer.Infrastructure.Repositories;
+using ExpenseAnalyzer.API.Repositories;
+using ExpenseAnalyzer.API.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

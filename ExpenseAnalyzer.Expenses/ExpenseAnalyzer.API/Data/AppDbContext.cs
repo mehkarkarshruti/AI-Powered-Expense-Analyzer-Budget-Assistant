@@ -1,7 +1,7 @@
-using ExpenseAnalyzer.Core.Entities;
+using ExpenseAnalyzer.API.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ExpenseAnalyzer.Infrastructure.Data;
+namespace ExpenseAnalyzer.API.Data;
 
 public class AppDbContext : DbContext
 {
