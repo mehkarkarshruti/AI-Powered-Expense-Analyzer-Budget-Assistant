@@ -1,6 +1,6 @@
 namespace ExpenseAnalyzer.Core.DTOs;
 
-public class ExpenseResponse
+public class ExpenseResponseDto
 {
     public int ExpenseId { get; set; }
     public int UserId { get; set; }

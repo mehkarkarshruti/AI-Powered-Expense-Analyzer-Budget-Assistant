@@ -5,9 +5,9 @@ namespace ExpenseAnalyzer.Core.Mappings;
 
 public static class DtoMappings
 {
-    public static ExpenseResponse ToResponse(this Expense expense)
+    public static ExpenseResponseDto ToResponse(this Expense expense)
     {
-        return new ExpenseResponse
+        return new ExpenseResponseDto
         {
             ExpenseId = expense.ExpenseId,
             UserId = expense.UserId,
@@ -20,9 +20,9 @@ public static class DtoMappings
         };
     }
 
-    public static CategoryResponse ToResponse(this Category category)
+    public static CategoryResponseDto ToResponse(this Category category)
     {
-        return new CategoryResponse
+        return new CategoryResponseDto
         {
             CategoryId = category.CategoryId,
             Name = category.Name,
@@ -30,7 +30,7 @@ public static class DtoMappings
         };
     }
 
-    public static Expense ToEntity(this CreateExpenseRequest request, int userId)
+    public static Expense ToEntity(this CreateExpenseDto request, int userId)
     {
         var now = DateTime.UtcNow;
 
