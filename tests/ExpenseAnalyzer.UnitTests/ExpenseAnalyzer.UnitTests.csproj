@@ -15,14 +15,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.11" />
-    <PackageReference Include="Moq" Version="4.20.70" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.8" />
+    <PackageReference Include="NSubstitute" Version="5.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ExpenseAnalyzer.Core\ExpenseAnalyzer.Core.csproj" />
     <ProjectReference Include="..\..\src\ExpenseAnalyzer.Infrastructure\ExpenseAnalyzer.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\ExpenseAnalyzer.API\ExpenseAnalyzer.API.csproj" />
+    <ProjectReference Include="..\..\ExpenseAnalyzer\ExpenseAnalyzer.API\ExpenseAnalyzer.API.csproj" />
   </ItemGroup>
 
 </Project>

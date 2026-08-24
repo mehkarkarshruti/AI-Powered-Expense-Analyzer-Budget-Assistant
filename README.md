@@ -2,7 +2,7 @@
 
 An AI-powered application to track expenses, analyze spending patterns, and assist with budget management.
 
-## Group 13
+## Group- 13
 
 | Application No. | Name |
 |---|---|
@@ -85,9 +85,12 @@ $$\text{Predicted Spending} = \max\left(\frac{\text{Current Spent So Far}}{\text
 ## Sequence Diagrams
 
 Documentation available in:
-* `SEQUENCE_DIAGRAMS.md`
+
+* SEQUENCE_DIAGRAMS.md
 
 Covered Flows:
+
 * Add Expense
 * Budget Warning (80% / 100%)
 * Spending Prediction
+

@@ -1,13 +1,10 @@
 ﻿using ExpenseAnalyzer.API.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ExpenseAnalyzer.API.Data
+namespace ExpenseAnalyzer.API.Data;
+
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public class AppDbContext : DbContext
-    {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-        }
 
         public DbSet<User> Users => Set<User>();
         public DbSet<Category> Categories => Set<Category>();
@@ -61,8 +58,13 @@ namespace ExpenseAnalyzer.API.Data
                     .HasForeignKey(b => b.UserId)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                // Enforces one budget per user per month/year
-                entity.HasIndex(b => new { b.UserId, b.Month, b.Year }).IsUnique();
+                // Enforces one budget per user per category per month/year
+                entity.HasIndex(b => new { b.UserId, b.CategoryId, b.Month, b.Year }).IsUnique();
+                
+                entity.HasOne(b => b.Category)
+                    .WithMany()
+                    .HasForeignKey(b => b.CategoryId)
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             // Alert configuration

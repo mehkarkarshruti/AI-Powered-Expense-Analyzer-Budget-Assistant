@@ -1,34 +1,36 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ExpenseAnalyzer.API.Models
+namespace ExpenseAnalyzer.API.Models;
+
+public class Budget
 {
-    public class Budget
-    {
-        [Key]
-        public int BudgetId { get; set; }
+    [Key]
+    public int BudgetId { get; set; }
 
-        [Required]
-        public int UserId { get; set; }
+    [Required]
+    public int UserId { get; set; }
 
-        [Required]
-        [Range(1, 12)]
-        public byte Month { get; set; }
+    public int? CategoryId { get; set; }
 
-        [Required]
-        [Range(2000, 2100)]
-        public short Year { get; set; }
+    [Required]
+    [Range(1, 12)]
+    public byte Month { get; set; }
 
-        [Required]
-        [Column(TypeName = "decimal(10,2)")]
-        public decimal BudgetAmount { get; set; }
+    [Required]
+    [Range(2000, 2100)]
+    public short Year { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    [Required]
+    [Column(TypeName = "decimal(10,2)")]
+    public decimal BudgetAmount { get; set; }
 
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        // Navigation properties
-        public User User { get; set; } = null!;
-        public ICollection<Alert> Alerts { get; set; } = new List<Alert>();
-    }
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    // Navigation properties
+    public User User { get; set; } = null!;
+    public Category? Category { get; set; }
+    public ICollection<Alert> Alerts { get; set; } = [];
 }
