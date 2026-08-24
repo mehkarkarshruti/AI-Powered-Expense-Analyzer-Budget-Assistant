@@ -27,11 +27,23 @@ namespace ExpenseAnalyzer.API.Repositories
                 .FirstOrDefaultAsync(c => c.CategoryId == id);
         }
 
+        public async Task<bool> NameExistsAsync(string name)
+        {
+            return await _context.Categories
+                .AnyAsync(c => c.Name == name);
+        }
+
         public async Task<Category> AddAsync(Category category)
         {
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
             return category;
+        }
+
+        public async Task DeactivateAsync(Category category)
+        {
+            category.IsActive = false;
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Category category)
