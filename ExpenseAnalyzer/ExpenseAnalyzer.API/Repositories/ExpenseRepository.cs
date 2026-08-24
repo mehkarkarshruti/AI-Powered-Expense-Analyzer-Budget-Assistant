@@ -20,6 +20,15 @@ namespace ExpenseAnalyzer.API.Repositories
                 .FirstOrDefaultAsync(e => e.ExpenseId == id && e.UserId == userId);
         }
 
+        public async Task<IEnumerable<Expense>> GetByUserIdAsync(int userId)
+        {
+            return await _context.Expenses
+                .Where(e => e.UserId == userId)
+                .Include(e => e.Category)
+                .OrderByDescending(e => e.ExpenseDate)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Expense>> GetAllByUserIdAsync(int userId)
         {
             return await _context.Expenses
