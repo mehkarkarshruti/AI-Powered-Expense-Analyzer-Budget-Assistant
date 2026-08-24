@@ -19,4 +19,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.11" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ExpenseAnalyzer.Core\ExpenseAnalyzer.Core.csproj" />
+    <ProjectReference Include="..\..\src\ExpenseAnalyzer.Infrastructure\ExpenseAnalyzer.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\ExpenseAnalyzer.API\ExpenseAnalyzer.API.csproj" />
+  </ItemGroup>
+
 </Project>

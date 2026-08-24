@@ -19,4 +19,11 @@
     <PackageReference Include="Moq" Version="4.20.70" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ExpenseAnalyzer.Core\ExpenseAnalyzer.Core.csproj" />
+    <ProjectReference Include="..\..\src\ExpenseAnalyzer.Infrastructure\ExpenseAnalyzer.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\ExpenseAnalyzer.ML\ExpenseAnalyzer.ML.csproj" />
+    <ProjectReference Include="..\..\src\ExpenseAnalyzer.API\ExpenseAnalyzer.API.csproj" />
+  </ItemGroup>
+
 </Project>
