@@ -1,4 +1,4 @@
-﻿using ExpenseAnalyzer.API.Models;
+using ExpenseAnalyzer.API.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseAnalyzer.API.Data;
@@ -85,6 +85,5 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
                 entity.HasIndex(a => a.UserId);
             });
-        }
     }
 }

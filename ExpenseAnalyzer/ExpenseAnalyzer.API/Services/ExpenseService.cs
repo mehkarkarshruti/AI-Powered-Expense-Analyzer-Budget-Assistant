@@ -20,7 +20,7 @@ public class ExpenseService(IExpenseRepository expenseRepo, IBudgetService budge
         var created = await expenseRepo.AddAsync(expense);
         
         // Immediately trigger check against budgets!
-        await budgetService.CheckBudgetThresholdsAsync(expense.UserId, expense.CategoryId, DateOnly.FromDateTime(expense.ExpenseDate));
+        await budgetService.CheckBudgetThresholdsAsync(expense.UserId, expense.CategoryId, expense.ExpenseDate);
         
         return created;
     }
@@ -30,7 +30,7 @@ public class ExpenseService(IExpenseRepository expenseRepo, IBudgetService budge
         await expenseRepo.UpdateAsync(expense);
         
         // Re-evaluate budget thresholds after update.
-        await budgetService.CheckBudgetThresholdsAsync(expense.UserId, expense.CategoryId, DateOnly.FromDateTime(expense.ExpenseDate));
+        await budgetService.CheckBudgetThresholdsAsync(expense.UserId, expense.CategoryId, expense.ExpenseDate);
     }
 
     public async Task DeleteExpenseAsync(Expense expense)
