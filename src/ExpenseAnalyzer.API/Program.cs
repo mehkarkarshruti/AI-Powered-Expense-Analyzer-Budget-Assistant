@@ -54,10 +54,7 @@ builder.Services.AddScoped<IPredictionEngine, PredictionService>();
 // Dependency Injection Registration for Analytics Module
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
-// Dependency Injection for Auth
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IExpenseService, ExpenseService>();
-builder.Services.AddScoped<IBudgetService, BudgetService>();
+// Unused dependency registrations removed
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var secretKey = jwtSettings["Secret"] ?? "SuperSecretKeyEnsureMinimumOfThirtyTwoBytesForHS256!!!";
