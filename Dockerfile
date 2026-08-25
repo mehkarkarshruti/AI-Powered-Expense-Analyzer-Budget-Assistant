@@ -11,6 +11,7 @@ COPY ["src/ExpenseAnalyzer.Core/ExpenseAnalyzer.Core.csproj", "src/ExpenseAnalyz
 COPY ["src/ExpenseAnalyzer.Infrastructure/ExpenseAnalyzer.Infrastructure.csproj", "src/ExpenseAnalyzer.Infrastructure/"]
 COPY ["src/ExpenseAnalyzer.ML/ExpenseAnalyzer.ML.csproj", "src/ExpenseAnalyzer.ML/"]
 COPY ["src/ExpenseAnalyzer.API/ExpenseAnalyzer.API.csproj", "src/ExpenseAnalyzer.API/"]
+COPY ["ExpenseAnalyzer/ExpenseAnalyzer.API/ExpenseAnalyzer.API.csproj", "ExpenseAnalyzer/ExpenseAnalyzer.API/"]
 
 # Restore dependencies precisely for the API
 RUN dotnet restore "src/ExpenseAnalyzer.API/ExpenseAnalyzer.API.csproj"
