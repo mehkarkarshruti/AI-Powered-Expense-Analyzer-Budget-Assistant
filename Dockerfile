@@ -1,24 +1,20 @@
 # Base processing image for API runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 8080
-ENV ASPNETCORE_URLS=http://0.0.0.0:8080
+EXPOSE 10000
 
 # Build environment
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy solution and project files
-COPY ["ExpenseAnalyzer.sln", "./"]
+# Copy core sub-projects to permit dedicated RESTORE execution
 COPY ["src/ExpenseAnalyzer.Core/ExpenseAnalyzer.Core.csproj", "src/ExpenseAnalyzer.Core/"]
 COPY ["src/ExpenseAnalyzer.Infrastructure/ExpenseAnalyzer.Infrastructure.csproj", "src/ExpenseAnalyzer.Infrastructure/"]
 COPY ["src/ExpenseAnalyzer.ML/ExpenseAnalyzer.ML.csproj", "src/ExpenseAnalyzer.ML/"]
 COPY ["src/ExpenseAnalyzer.API/ExpenseAnalyzer.API.csproj", "src/ExpenseAnalyzer.API/"]
-# We also copy Web to allow solution restore, even if we don't build it here
-COPY ["ExpenseAnalyzer.Web/ExpenseAnalyzer.Web.csproj", "ExpenseAnalyzer.Web/"]
 
-# Restore dependencies
-RUN dotnet restore "ExpenseAnalyzer.sln"
+# Restore dependencies precisely for the API
+RUN dotnet restore "src/ExpenseAnalyzer.API/ExpenseAnalyzer.API.csproj"
 
 # Copy full source and build
 COPY . .
@@ -29,8 +25,9 @@ RUN dotnet build "ExpenseAnalyzer.API.csproj" -c Release -o /app/build/api
 FROM build AS publishapi
 RUN dotnet publish "ExpenseAnalyzer.API.csproj" -c Release -o /app/publish/api
 
-# Start API execution natively
+# Start API execution natively using explicitly mapped PORT arguments ensuring runtime evaluation
 FROM base AS final
 WORKDIR /app
 COPY --from=publishapi /app/publish/api .
-ENTRYPOINT ["dotnet", "ExpenseAnalyzer.API.dll"]
+# Executes with sh -c to expand environment variables safely at runtime
+CMD ["sh", "-c", "dotnet ExpenseAnalyzer.API.dll --urls http://0.0.0.0:${PORT:-10000}"]
