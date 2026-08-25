@@ -3,6 +3,8 @@ using ExpenseAnalyzer.Core.Interfaces;
 using ExpenseAnalyzer.Infrastructure.Data;
 using ExpenseAnalyzer.ML;
 using ExpenseAnalyzer.API.Services;
+using ExpenseAnalyzer.API.Repositories;
+using LegacyData = ExpenseAnalyzer.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -48,19 +50,29 @@ if (string.IsNullOrEmpty(dbConfigPath))
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(dbConfigPath));
 
+// Ensure Legacy Database dependencies can natively resolve in the container mapping identically
+builder.Services.AddDbContext<LegacyData.AppDbContext>(options =>
+    options.UseSqlite(dbConfigPath));
+
 // Dependency Injection Registration for Devbrat's Machine Learning & Prediction Module
 builder.Services.AddScoped<IPredictionEngine, PredictionService>();
 
 // Dependency Injection Registration for Analytics Module
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
-// Dependency Injection for Auth
+// Dependency Injection for Auth, Budget, and Expense abstractions
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
 builder.Services.AddScoped<IBudgetService, BudgetService>();
-
+builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<IAlertService, AlertService>();
+builder.Services.AddScoped<IAlertRepository, AlertRepository>();
+builder.Services.AddScoped<IBudgetRepository, BudgetRepository>();
+builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddHttpClient();
 var jwtSettings = builder.Configuration.GetSection("Jwt");
-var secretKey = jwtSettings["Secret"] ?? "SuperSecretKeyEnsureMinimumOfThirtyTwoBytesForHS256!!!";
+var secretKey = jwtSettings["Key"] ?? "SuperSecretKeyEnsureMinimumOfThirtyTwoBytesForHS256!!!";
 
 builder.Services.AddAuthentication(options =>
 {
