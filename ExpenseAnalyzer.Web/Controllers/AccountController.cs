@@ -1,5 +1,6 @@
-using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Json;
+using System.Text.Json.Serialization;
 
 namespace ExpenseAnalyzer.Web.Controllers;
 
@@ -12,64 +13,47 @@ public class AccountController : Controller
         _httpClientFactory = httpClientFactory;
     }
 
+    public record AuthResponse(
+        [property: JsonPropertyName("userId")] int UserId,
+        [property: JsonPropertyName("name")] string Name,
+        [property: JsonPropertyName("email")] string Email,
+        [property: JsonPropertyName("token")] string Token);
+
     [HttpGet]
     public IActionResult Login()
     {
+        if (!string.IsNullOrEmpty(HttpContext.Session.GetString("Token")))
+        {
+            return RedirectToAction("Index", "Dashboard");
+        }
+
         return View();
     }
 
     [HttpPost]
     public async Task<IActionResult> Login(string email, string password)
     {
-        if (string.IsNullOrWhiteSpace(email) ||
-            string.IsNullOrWhiteSpace(password))
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
         {
             ViewBag.Error = "Please enter your email and password.";
             return View();
         }
 
-        try
+        var client = _httpClientFactory.CreateClient("Api");
+
+        var response = await client.PostAsJsonAsync("auth/login", new { email, password });
+
+        if (!response.IsSuccessStatusCode)
         {
-            var client = _httpClientFactory.CreateClient();
-
-            var request = new
-            {
-                email,
-                password
-            };
-
-            var response = await client.PostAsJsonAsync(
-                "http://localhost:5001/api/Auth/login",
-                request);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                ViewBag.Error = "Invalid email or password.";
-                return View();
-            }
-
-            var result =
-                await response.Content.ReadFromJsonAsync<LoginResponse>();
-
-            if (result == null || string.IsNullOrEmpty(result.Token))
-            {
-                ViewBag.Error = "Login failed. No token received.";
-                return View();
-            }
-
-            HttpContext.Session.SetString("JwtToken", result.Token);
-            HttpContext.Session.SetString("UserId", result.UserId.ToString());
-            HttpContext.Session.SetString("UserName", result.Name);
-            HttpContext.Session.SetString("UserEmail", result.Email);
-
-            return RedirectToAction("Index", "Dashboard");
-        }
-        catch
-        {
-            ViewBag.Error =
-                "Unable to connect to the authentication server.";
+            ViewBag.Error = "Invalid email or password.";
             return View();
         }
+
+        var auth = await response.Content.ReadFromJsonAsync<AuthResponse>();
+
+        StoreAuthSession(auth!);
+
+        return RedirectToAction("Index", "Dashboard");
     }
 
     [HttpGet]
@@ -99,71 +83,51 @@ public class AccountController : Controller
             return View();
         }
 
-        try
+        var client = _httpClientFactory.CreateClient("Api");
+
+        var response = await client.PostAsJsonAsync("auth/register", new { name, email, password });
+
+        if (!response.IsSuccessStatusCode)
         {
-            var client = _httpClientFactory.CreateClient();
-
-            var request = new
-            {
-                name,
-                email,
-                password
-            };
-
-            var response = await client.PostAsJsonAsync(
-                "http://localhost:5001/api/Auth/register",
-                request);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var error = await response.Content.ReadAsStringAsync();
-
-                ViewBag.Error = response.StatusCode == System.Net.HttpStatusCode.Conflict
-                    ? "A user with this email already exists."
-                    : "Registration failed.";
-
-                return View();
-            }
-
-            var result =
-                await response.Content.ReadFromJsonAsync<LoginResponse>();
-
-            if (result == null || string.IsNullOrEmpty(result.Token))
-            {
-                ViewBag.Error = "Registration failed. No token received.";
-                return View();
-            }
-
-            HttpContext.Session.SetString("JwtToken", result.Token);
-            HttpContext.Session.SetString("UserId", result.UserId.ToString());
-            HttpContext.Session.SetString("UserName", result.Name);
-            HttpContext.Session.SetString("UserEmail", result.Email);
-
-            return RedirectToAction("Index", "Dashboard");
-        }
-        catch
-        {
+            var body = await response.Content.ReadAsStringAsync();
             ViewBag.Error =
-                "Unable to connect to the authentication server.";
+                ExtractMessage(body) ?? "Registration failed. The email may already be in use.";
             return View();
         }
+
+        var auth = await response.Content.ReadFromJsonAsync<AuthResponse>();
+
+        StoreAuthSession(auth!);
+
+        return RedirectToAction("Index", "Dashboard");
     }
 
-    [HttpPost]
+    [HttpGet]
     public IActionResult Logout()
     {
         HttpContext.Session.Clear();
-        return RedirectToAction("Login", "Account");
+
+        return RedirectToAction("Login");
     }
-}
 
-public class LoginResponse
-{
-    public int UserId { get; set; }
+    private void StoreAuthSession(AuthResponse auth)
+    {
+        HttpContext.Session.SetString("UserId", auth.UserId.ToString());
+        HttpContext.Session.SetString("UserName", auth.Name);
+        HttpContext.Session.SetString("UserEmail", auth.Email);
+        HttpContext.Session.SetString("Token", auth.Token);
+    }
 
-    public string Name { get; set; } = string.Empty;
-
-    public string Email { get; set; } = string.Empty;
-
-    public string Token { get; set; } = string.Empty;
+    private static string? ExtractMessage(string json)
+    {
+        try
+        {
+            using var doc = System.Text.Json.JsonDocument.Parse(json);
+            return doc.RootElement.TryGetProperty("message", out var m) ? m.GetString() : null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
 }

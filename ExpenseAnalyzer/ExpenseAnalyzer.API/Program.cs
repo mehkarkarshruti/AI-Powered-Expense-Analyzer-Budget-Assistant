@@ -24,9 +24,20 @@ builder.Services.AddCors(options =>
 });
 
 // Database
+var databaseProvider = builder.Configuration["DatabaseProvider"] ?? "SqlServer";
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    if (databaseProvider.Equals("Sqlite", StringComparison.OrdinalIgnoreCase))
+    {
+        options.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection"));
+    }
+    else
+    {
+        options.UseSqlServer(
+            builder.Configuration.GetConnectionString("DefaultConnection"));
+    }
+});
 
 // Custom Services
 builder.Services.AddScoped<AuthService>();

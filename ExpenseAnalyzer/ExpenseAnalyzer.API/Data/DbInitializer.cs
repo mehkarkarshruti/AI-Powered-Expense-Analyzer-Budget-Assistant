@@ -7,8 +7,19 @@ namespace ExpenseAnalyzer.API.Data
     {
         public static async Task SeedAsync(AppDbContext context)
         {
-            // Automatically applies any pending migrations
-            await context.Database.MigrateAsync();
+            var isSqlite = context.Database.ProviderName?.Contains("Sqlite") == true;
+
+            if (isSqlite)
+            {
+                // SQLite (cloud deployments): migrations are SQL Server-specific,
+                // so create the schema directly from the current model instead.
+                await context.Database.EnsureCreatedAsync();
+            }
+            else
+            {
+                // SQL Server (local development): apply pending migrations.
+                await context.Database.MigrateAsync();
+            }
 
             // Seeds default categories if the table is empty
             if (!await context.Categories.AnyAsync())

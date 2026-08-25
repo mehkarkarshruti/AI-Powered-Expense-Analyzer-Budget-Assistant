@@ -1,0 +1,30 @@
+# Auth/Expenses/Budgets API (ExpenseAnalyzer.API)
+# Build context must be the REPOSITORY ROOT (references src/ExpenseAnalyzer.Core)
+
+# Base image for runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
+WORKDIR /app
+
+# Build environment
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+WORKDIR /src
+
+COPY ["ExpenseAnalyzer/ExpenseAnalyzer.API/ExpenseAnalyzer.API.csproj", "ExpenseAnalyzer/ExpenseAnalyzer.API/"]
+COPY ["src/ExpenseAnalyzer.Core/ExpenseAnalyzer.Core.csproj", "src/ExpenseAnalyzer.Core/"]
+RUN dotnet restore "ExpenseAnalyzer/ExpenseAnalyzer.API/ExpenseAnalyzer.API.csproj"
+
+COPY ExpenseAnalyzer/ExpenseAnalyzer.API/ ExpenseAnalyzer/ExpenseAnalyzer.API/
+COPY src/ExpenseAnalyzer.Core/ src/ExpenseAnalyzer.Core/
+
+WORKDIR "/src/ExpenseAnalyzer/ExpenseAnalyzer.API"
+RUN dotnet build "ExpenseAnalyzer.API.csproj" -c Release -o /app/build/authapi
+
+FROM build AS publishauthapi
+RUN dotnet publish "ExpenseAnalyzer.API.csproj" -c Release -o /app/publish/authapi
+
+# Render injects PORT; default to 10000
+FROM base AS final
+WORKDIR /app
+COPY --from=publishauthapi /app/publish/authapi .
+ENV DatabaseProvider=Sqlite
+CMD ["sh", "-c", "dotnet ExpenseAnalyzer.AuthApi.dll --urls http://0.0.0.0:${PORT:-10000}"]

@@ -17,21 +17,29 @@
 
             <div class="section-header">
                 <div>
-                    <h3>Monthly Spending</h3>
-                    <p>August 2026</p>
+                    <h3>Daily Spending</h3>
+                    <p>@ViewBag.MonthLabel</p>
                 </div>
             </div>
 
-            <div class="bar-chart">
-                <div class="bar-column"><div class="bar" style="height:45%"></div><span>1</span></div>
-                <div class="bar-column"><div class="bar" style="height:65%"></div><span>5</span></div>
-                <div class="bar-column"><div class="bar" style="height:35%"></div><span>10</span></div>
-                <div class="bar-column"><div class="bar" style="height:80%"></div><span>15</span></div>
-                <div class="bar-column"><div class="bar active" style="height:90%"></div><span>20</span></div>
-                <div class="bar-column"><div class="bar" style="height:55%"></div><span>21</span></div>
-                <div class="bar-column"><div class="bar" style="height:30%"></div><span>25</span></div>
-                <div class="bar-column"><div class="bar" style="height:45%"></div><span>30</span></div>
-            </div>
+            @if ((bool)ViewBag.HasExpenses)
+            {
+                <div class="bar-chart">
+                    @foreach (var bar in (List<(int Day, decimal Total, int Height)>)ViewBag.DayBars)
+                    {
+                        <div class="bar-column"
+                             title="@bar.Day @ViewBag.MonthLabel.Split(' ')[0]: ₹@bar.Total">
+                            <div class="bar @(bar.Height > 0 ? "" : "empty")"
+                                 style="height:@(Math.Max(bar.Height, 2))%"></div>
+                            <span>@(bar.Day % 5 == 0 || bar.Day == 1 ? bar.Day.ToString() : "")</span>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="empty-state">No expenses recorded this month yet.</p>
+            }
 
         </div>
 
@@ -44,57 +52,32 @@
                 </div>
             </div>
 
-            <div class="category-list">
+            @if (ViewBag.CategoryTotals is not null &&
+                 ((List<(string Name, string Amount, int Pct)>)ViewBag.CategoryTotals).Count > 0)
+            {
+                <div class="category-list">
 
-                <div class="category-row">
-                    <div class="category-name">
-                        <span class="category-dot food"></span>
-                        Food
-                    </div>
-                    <strong>₹4,000</strong>
+                    @foreach (var row in (List<(string Name, string Amount, int Pct)>)ViewBag.CategoryTotals)
+                    {
+                        <div class="category-row">
+                            <div class="category-name">
+                                <span class="category-dot"></span>
+                                @row.Name
+                            </div>
+                            <strong>@row.Amount</strong>
+                        </div>
+
+                        <div class="progress">
+                            <div style="width:@(row.Pct)%"></div>
+                        </div>
+                    }
+
                 </div>
-
-                <div class="progress">
-                    <div style="width:80%"></div>
-                </div>
-
-                <div class="category-row">
-                    <div class="category-name">
-                        <span class="category-dot travel"></span>
-                        Travel
-                    </div>
-                    <strong>₹2,500</strong>
-                </div>
-
-                <div class="progress">
-                    <div style="width:50%"></div>
-                </div>
-
-                <div class="category-row">
-                    <div class="category-name">
-                        <span class="category-dot shopping"></span>
-                        Shopping
-                    </div>
-                    <strong>₹3,000</strong>
-                </div>
-
-                <div class="progress">
-                    <div style="width:60%"></div>
-                </div>
-
-                <div class="category-row">
-                    <div class="category-name">
-                        <span class="category-dot bills"></span>
-                        Bills
-                    </div>
-                    <strong>₹1,500</strong>
-                </div>
-
-                <div class="progress">
-                    <div style="width:30%"></div>
-                </div>
-
-            </div>
+            }
+            else
+            {
+                <p class="empty-state">No category data yet.</p>
+            }
 
         </div>
 

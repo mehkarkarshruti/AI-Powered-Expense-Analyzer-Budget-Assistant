@@ -27,16 +27,6 @@
 
         <select id="categoryFilter" onchange="filterExpenses()">
             <option value="">All Categories</option>
-            <option value="Food">Food</option>
-            <option value="Travel">Travel</option>
-            <option value="Shopping">Shopping</option>
-            <option value="Bills">Bills</option>
-        </select>
-
-        <select>
-            <option>August 2026</option>
-            <option>July 2026</option>
-            <option>June 2026</option>
         </select>
 
     </div>
@@ -50,7 +40,7 @@
                 <p>Your recorded transactions</p>
             </div>
 
-            <strong id="expenseCount">5 transactions</strong>
+            <strong id="expenseCount">0 transactions</strong>
         </div>
 
         <div class="table-wrapper">
@@ -69,116 +59,6 @@
                 </thead>
 
                 <tbody id="expenseTable">
-
-                    <tr data-category="Food">
-                        <td>21 Aug 2026</td>
-                        <td>
-                            <span class="expense-category food-cat">
-                                🍔 Food
-                            </span>
-                        </td>
-                        <td>Lunch</td>
-                        <td class="amount">₹250</td>
-                        <td><span class="status normal">Normal</span></td>
-                        <td>
-                            <button class="table-btn edit-btn"
-                                    onclick="editExpense(this)">
-                                Edit
-                            </button>
-                            <button class="table-btn delete-btn"
-                                    onclick="deleteExpense(this)">
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-
-                    <tr data-category="Travel">
-                        <td>20 Aug 2026</td>
-                        <td>
-                            <span class="expense-category travel-cat">
-                                🚕 Travel
-                            </span>
-                        </td>
-                        <td>Uber</td>
-                        <td class="amount">₹180</td>
-                        <td><span class="status normal">Normal</span></td>
-                        <td>
-                            <button class="table-btn edit-btn"
-                                    onclick="editExpense(this)">
-                                Edit
-                            </button>
-                            <button class="table-btn delete-btn"
-                                    onclick="deleteExpense(this)">
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-
-                    <tr data-category="Shopping">
-                        <td>19 Aug 2026</td>
-                        <td>
-                            <span class="expense-category shopping-cat">
-                                🛍 Shopping
-                            </span>
-                        </td>
-                        <td>Clothes</td>
-                        <td class="amount">₹1,200</td>
-                        <td><span class="status warning">High</span></td>
-                        <td>
-                            <button class="table-btn edit-btn"
-                                    onclick="editExpense(this)">
-                                Edit
-                            </button>
-                            <button class="table-btn delete-btn"
-                                    onclick="deleteExpense(this)">
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-
-                    <tr data-category="Food">
-                        <td>18 Aug 2026</td>
-                        <td>
-                            <span class="expense-category food-cat">
-                                🍔 Food
-                            </span>
-                        </td>
-                        <td>Dinner</td>
-                        <td class="amount">₹350</td>
-                        <td><span class="status normal">Normal</span></td>
-                        <td>
-                            <button class="table-btn edit-btn"
-                                    onclick="editExpense(this)">
-                                Edit
-                            </button>
-                            <button class="table-btn delete-btn"
-                                    onclick="deleteExpense(this)">
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-
-                    <tr data-category="Bills">
-                        <td>17 Aug 2026</td>
-                        <td>
-                            <span class="expense-category bills-cat">
-                                🧾 Bills
-                            </span>
-                        </td>
-                        <td>Internet Bill</td>
-                        <td class="amount">₹799</td>
-                        <td><span class="status normal">Normal</span></td>
-                        <td>
-                            <button class="table-btn edit-btn"
-                                    onclick="editExpense(this)">
-                                Edit
-                            </button>
-                            <button class="table-btn delete-btn"
-                                    onclick="deleteExpense(this)">
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
 
                 </tbody>
 
@@ -202,7 +82,7 @@
                 <p>Enter your transaction details.</p>
             </div>
 
-            <button class="close-btn" onclick="closeExpenseModal()">×</button>
+            <button type="button" class="close-btn" onclick="closeExpenseModal()">×</button>
         </div>
 
         <form onsubmit="saveExpense(event)">
@@ -211,7 +91,8 @@
                 <label>Amount</label>
                 <input type="number" id="expenseAmount"
                        placeholder="₹ 0.00"
-                       min="1"
+                       min="0.01"
+                       step="0.01"
                        required />
             </div>
 
@@ -220,11 +101,7 @@
                 <div class="form-group">
                     <label>Category</label>
                     <select id="expenseCategory" required>
-                        <option value="">Select category</option>
-                        <option>Food</option>
-                        <option>Travel</option>
-                        <option>Shopping</option>
-                        <option>Bills</option>
+                        <option value="" disabled selected>Select category</option>
                     </select>
                 </div>
 

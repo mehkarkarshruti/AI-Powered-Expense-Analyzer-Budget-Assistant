@@ -6,11 +6,13 @@
 
     <div class="page-heading">
         <div>
-            <h1>Dashboard</h1>
-            <p>Good evening, Samiksha 👋 Here's your spending overview.</p>
+            <h1>Welcome back, @ViewBag.UserName</h1>
+            <p>Here is your spending overview.</p>
         </div>
 
-        <a href="/Expense" class="primary-btn">+ Add Expense</a>
+        <button class="primary-btn" onclick="window.location.href='/Expense'">
+            + Add Expense
+        </button>
     </div>
 
     <!-- SUMMARY -->
@@ -21,7 +23,7 @@
                 <span>Total Spent</span>
                 <div class="card-icon purple">₹</div>
             </div>
-            <h2 id="totalSpent">₹12,450</h2>
+            <h2 id="totalSpent">@ViewBag.TotalSpent</h2>
             <p>This month</p>
         </div>
 
@@ -30,7 +32,7 @@
                 <span>Monthly Budget</span>
                 <div class="card-icon blue">₹</div>
             </div>
-            <h2 id="budgetAmount">₹15,000</h2>
+            <h2 id="budgetAmount">@ViewBag.BudgetAmount</h2>
             <p><button class="mini-link" onclick="openBudgetModal()">Update budget</button></p>
         </div>
 
@@ -39,8 +41,8 @@
                 <span>Remaining</span>
                 <div class="card-icon green">✓</div>
             </div>
-            <h2 id="remainingAmount">₹2,550</h2>
-            <p id="budgetPercentage">17% remaining</p>
+            <h2 id="remainingAmount">@ViewBag.Remaining</h2>
+            <p id="budgetPercentage"></p>
         </div>
 
         <div class="summary-card">
@@ -48,55 +50,15 @@
                 <span>Daily Average</span>
                 <div class="card-icon orange">↗</div>
             </div>
-            <h2 id="dailyAverage">₹591</h2>
-            <p>Average per day</p>
+            <h2 id="dailyAverage">@ViewBag.DailyAverage</h2>
+            <p>@ViewBag.TransactionCount transactions · top: @ViewBag.TopCategory</p>
         </div>
 
     </div>
 
-    <!-- ALERT -->
-    <div id="budgetAlert" class="dashboard-alert warning-alert">
-        <div class="dashboard-alert-icon">!</div>
-        <div>
-            <strong>Budget Warning</strong>
-            <p id="budgetAlertText">
-                You have used 83% of your monthly budget.
-            </p>
-        </div>
-    </div>
-
-    <!-- MAIN -->
+    <!-- CATEGORY + AI -->
     <div class="dashboard-grid">
 
-        <div class="dashboard-card spending-card">
-
-            <div class="section-header">
-                <div>
-                    <h3>Spending Overview</h3>
-                    <p>Daily spending this month</p>
-                </div>
-
-                <select>
-                    <option>August 2026</option>
-                    <option>July 2026</option>
-                    <option>June 2026</option>
-                </select>
-            </div>
-
-            <div class="bar-chart">
-                <div class="bar-column"><div class="bar" style="height:45%"></div><span>1</span></div>
-                <div class="bar-column"><div class="bar" style="height:65%"></div><span>5</span></div>
-                <div class="bar-column"><div class="bar" style="height:35%"></div><span>10</span></div>
-                <div class="bar-column"><div class="bar" style="height:80%"></div><span>15</span></div>
-                <div class="bar-column"><div class="bar active" style="height:90%"></div><span>20</span></div>
-                <div class="bar-column"><div class="bar" style="height:55%"></div><span>21</span></div>
-                <div class="bar-column"><div class="bar" style="height:30%"></div><span>25</span></div>
-                <div class="bar-column"><div class="bar" style="height:45%"></div><span>30</span></div>
-            </div>
-
-        </div>
-
-        <!-- CATEGORY -->
         <div class="dashboard-card">
 
             <div class="section-header">
@@ -106,45 +68,26 @@
                 </div>
             </div>
 
-            <div class="category-list">
-
-                <div class="category-row">
-                    <div class="category-name">
-                        <span class="category-dot food"></span>
-                        Food
-                    </div>
-                    <strong>₹4,000</strong>
+            @if (ViewBag.Breakdown is not null && ((List<(string Name, string Amount, int Pct)>)ViewBag.Breakdown).Count > 0)
+            {
+                <div class="category-list">
+                    @foreach (var row in (List<(string Name, string Amount, int Pct)>)ViewBag.Breakdown)
+                    {
+                        <div class="category-row">
+                            <div class="category-name">
+                                <span class="category-dot"></span>
+                                @row.Name
+                            </div>
+                            <strong>@row.Amount</strong>
+                        </div>
+                        <div class="progress"><div style="width:@(row.Pct)%"></div></div>
+                    }
                 </div>
-                <div class="progress"><div style="width:80%"></div></div>
-
-                <div class="category-row">
-                    <div class="category-name">
-                        <span class="category-dot travel"></span>
-                        Travel
-                    </div>
-                    <strong>₹2,500</strong>
-                </div>
-                <div class="progress"><div style="width:50%"></div></div>
-
-                <div class="category-row">
-                    <div class="category-name">
-                        <span class="category-dot shopping"></span>
-                        Shopping
-                    </div>
-                    <strong>₹3,000</strong>
-                </div>
-                <div class="progress"><div style="width:60%"></div></div>
-
-                <div class="category-row">
-                    <div class="category-name">
-                        <span class="category-dot bills"></span>
-                        Bills
-                    </div>
-                    <strong>₹1,500</strong>
-                </div>
-                <div class="progress"><div style="width:30%"></div></div>
-
-            </div>
+            }
+            else
+            {
+                <p class="empty-state">No expenses recorded yet. Add your first expense to see the breakdown.</p>
+            }
 
         </div>
 
@@ -166,13 +109,22 @@
 
             <div class="prediction-value">
                 <span>Expected monthly spending</span>
-                <strong>₹17,800</strong>
+                <strong>@ViewBag.Predicted</strong>
             </div>
 
-            <div class="prediction-warning">
-                ⚠ You may exceed your current budget by
-                <strong id="predictionDifference">₹2,800</strong>.
-            </div>
+            @if ((bool)ViewBag.HasPrediction)
+            {
+                <div class="prediction-warning">
+                    ⚠ You may exceed your current budget by
+                    <strong id="predictionDifference">@ViewBag.PredictionDifference</strong>.
+                </div>
+            }
+            else
+            {
+                <div class="prediction-warning">
+                    No prediction available yet.
+                </div>
+            }
 
         </div>
 
@@ -192,8 +144,8 @@
             </div>
 
             <div class="budget-labels">
-                <span id="spentLabel">₹12,450 spent</span>
-                <span id="budgetLabel">₹15,000 budget</span>
+                <span id="spentLabel">@ViewBag.TotalSpent spent</span>
+                <span id="budgetLabel">@ViewBag.BudgetAmount budget</span>
             </div>
 
             <button class="budget-update-btn" onclick="openBudgetModal()">
@@ -262,5 +214,13 @@
 </div>
 
 @section Scripts {
+    <script>
+        window.serverData = {
+            totalSpent: @(ViewBag.TotalSpentRaw),
+            budget: @(ViewBag.BudgetRaw),
+            transactionCount: @((int)(ViewBag.TransactionCount ?? 0)),
+            topCategory: "@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode((string)ViewBag.TopCategory))"
+        };
+    </script>
     <script src="~/js/dashboard.js" asp-append-version="true"></script>
 }

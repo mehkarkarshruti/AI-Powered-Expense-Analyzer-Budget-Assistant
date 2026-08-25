@@ -1,152 +1,447 @@
-let editingRow = null;
+// SpendWise expense page — wired to the backend API through the Web app.
+// All rendering/formatting by Gitanshi; data layer now hits /Expense/* endpoints,
+// which proxy the authenticated API using the server-side session token.
 
-function openExpenseModal() {
-    document.getElementById("expenseModal").classList.add("show");
-    document.getElementById("modalTitle").textContent = "Add Expense";
+let editingId = null;
+let expenses = [];
+let categories = [];
 
-    document.getElementById("expenseAmount").value = "";
-    document.getElementById("expenseCategory").value = "";
-    document.getElementById("expenseDescription").value = "";
-
-    const today = new Date().toISOString().split("T")[0];
-    document.getElementById("expenseDate").value = today;
-
-    editingRow = null;
+function formatCurrency(value) {
+    return "₹" + Number(value).toLocaleString("en-IN");
 }
 
-function closeExpenseModal() {
-    document.getElementById("expenseModal").classList.remove("show");
+function formatDate(date) {
+    return new Date(date + "T00:00:00").toLocaleDateString(
+        "en-IN",
+        {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        }
+    );
 }
 
-function saveExpense(event) {
-    event.preventDefault();
+function getCategoryEmoji(category) {
 
-    const amount = document.getElementById("expenseAmount").value;
-    const category = document.getElementById("expenseCategory").value;
-    const date = document.getElementById("expenseDate").value;
-    const description =
-        document.getElementById("expenseDescription").value || "Expense";
+    const name = (category || "").toLowerCase();
 
-    if (editingRow) {
-        editingRow.cells[1].innerHTML =
-            `<span class="expense-category">${category}</span>`;
+    if (name.includes("food") || name.includes("dining")) return "🍔";
+    if (name.includes("travel") || name.includes("transport")) return "🚕";
+    if (name.includes("shopping")) return "🛍";
+    if (name.includes("bill") || name.includes("utilit")) return "🧾";
+    if (name.includes("entertain")) return "🎬";
+    if (name.includes("health")) return "⚕️";
+    if (name.includes("housing") || name.includes("rent")) return "🏠";
 
-        editingRow.cells[2].textContent = description;
-        editingRow.cells[3].textContent = `₹${amount}`;
+    return "💰";
+}
 
-        editingRow.dataset.category = category;
+function getExpenseStatus(amount) {
+    if (amount >= 1000) {
+        return "High";
+    }
 
-    } else {
-        const table = document.getElementById("expenseTable");
+    return "Normal";
+}
+
+async function apiFetch(url, options = {}) {
+
+    const response = await fetch(url, options);
+
+    if (response.status === 401) {
+        window.location.href = "/Account/Login";
+        throw new Error("Session expired");
+    }
+
+    return response;
+}
+
+async function loadCategories() {
+
+    try {
+        categories = await apiFetch("/Expense/Categories").then(r => r.json());
+    } catch {
+        categories = [];
+    }
+
+    const modalSelect =
+        document.getElementById("expenseCategory");
+
+    const filterSelect =
+        document.getElementById("categoryFilter");
+
+    if (modalSelect) {
+
+        modalSelect.innerHTML =
+            '<option value="" disabled selected>Select category</option>';
+
+        categories.forEach(category => {
+
+            const option = document.createElement("option");
+
+            option.value = category.categoryId;
+            option.textContent = category.name;
+
+            modalSelect.appendChild(option);
+        });
+    }
+
+    if (filterSelect) {
+
+        filterSelect.innerHTML =
+            '<option value="">All Categories</option>';
+
+        categories.forEach(category => {
+
+            const option = document.createElement("option");
+
+            option.value = category.name;
+            option.textContent = category.name;
+
+            filterSelect.appendChild(option);
+        });
+    }
+}
+
+async function loadExpenses() {
+
+    try {
+        expenses = await apiFetch("/Expense/List").then(r => r.json());
+    } catch {
+        expenses = [];
+    }
+
+    renderExpenses();
+}
+
+function renderExpenses() {
+
+    const table = document.getElementById("expenseTable");
+
+    if (!table) {
+        return;
+    }
+
+    table.innerHTML = "";
+
+    expenses.forEach(expense => {
 
         const row = document.createElement("tr");
 
-        row.dataset.category = category;
+        row.dataset.category = expense.category;
+        row.dataset.id = expense.id;
 
-        const formattedDate = new Date(date).toLocaleDateString(
-            "en-IN",
-            {
-                day: "2-digit",
-                month: "short",
-                year: "numeric"
-            }
-        );
+        const status = getExpenseStatus(expense.amount);
 
         row.innerHTML = `
-            <td>${formattedDate}</td>
+            <td>${formatDate(expense.date)}</td>
+
             <td>
-                <span class="expense-category">${category}</span>
+                <span class="expense-category">
+                    ${getCategoryEmoji(expense.category)}
+                    ${escapeHtml(expense.category)}
+                </span>
             </td>
-            <td>${description}</td>
-            <td class="amount">₹${amount}</td>
-            <td>
-                <span class="status normal">Normal</span>
+
+            <td>${escapeHtml(expense.description)}</td>
+
+            <td class="amount">
+                ${formatCurrency(expense.amount)}
             </td>
+
             <td>
-                <button class="table-btn edit-btn"
-                        onclick="editExpense(this)">
+                <span class="status ${status === "High" ? "warning" : "normal"}">
+                    ${status}
+                </span>
+            </td>
+
+            <td>
+                <button
+                    class="table-btn edit-btn"
+                    onclick="editExpense('${expense.id}')">
                     Edit
                 </button>
-                <button class="table-btn delete-btn"
-                        onclick="deleteExpense(this)">
+
+                <button
+                    class="table-btn delete-btn"
+                    onclick="deleteExpense('${expense.id}')">
                     Delete
                 </button>
             </td>
         `;
 
-        table.prepend(row);
-    }
+        table.appendChild(row);
+    });
 
     updateCount();
-    closeExpenseModal();
 }
 
-function editExpense(button) {
-    editingRow = button.closest("tr");
+function escapeHtml(value) {
 
-    const amount = editingRow
-        .cells[3]
-        .textContent
-        .replace("₹", "")
-        .replace(",", "");
+    const div = document.createElement("div");
 
-    const category = editingRow.dataset.category;
-    const description = editingRow.cells[2].textContent;
+    div.textContent = value ?? "";
 
-    document.getElementById("modalTitle").textContent = "Edit Expense";
-    document.getElementById("expenseAmount").value = amount;
-    document.getElementById("expenseCategory").value = category;
-    document.getElementById("expenseDescription").value = description;
-
-    document.getElementById("expenseModal").classList.add("show");
+    return div.innerHTML;
 }
 
-function deleteExpense(button) {
-    if (confirm("Delete this expense?")) {
-        button.closest("tr").remove();
-        updateCount();
+function openExpenseModal() {
+
+    const modal = document.getElementById("expenseModal");
+
+    document.getElementById("modalTitle").textContent =
+        "Add Expense";
+
+    document.getElementById("expenseAmount").value = "";
+    document.getElementById("expenseCategory").value = "";
+    document.getElementById("expenseDescription").value = "";
+
+    const today =
+        new Date().toISOString().split("T")[0];
+
+    document.getElementById("expenseDate").value = today;
+
+    editingId = null;
+
+    modal.classList.add("show");
+}
+
+function closeExpenseModal() {
+
+    const modal =
+        document.getElementById("expenseModal");
+
+    modal.classList.remove("show");
+
+    // Make sure the modal is completely hidden.
+    modal.style.display = "none";
+
+    // Allow it to be displayed again when opened.
+    setTimeout(() => {
+        modal.style.display = "";
+    }, 10);
+
+    editingId = null;
+}
+
+async function saveExpense(event) {
+
+    event.preventDefault();
+
+    const amount =
+        Number(
+            document.getElementById("expenseAmount").value
+        );
+
+    const categoryId =
+        Number(
+            document.getElementById("expenseCategory").value
+        );
+
+    const date =
+        document.getElementById("expenseDate").value;
+
+    const description =
+        document.getElementById("expenseDescription").value.trim()
+        || "Expense";
+
+    if (
+        !amount ||
+        amount <= 0 ||
+        !categoryId ||
+        !date
+    ) {
+        return;
     }
+
+    const payload = {
+        categoryId,
+        amount,
+        date,
+        description
+    };
+
+    let response;
+
+    if (editingId) {
+
+        response = await apiFetch(`/Expense/Update/${editingId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+    } else {
+
+        response = await apiFetch("/Expense/Create", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+    }
+
+    if (!response.ok) {
+        alert("Could not save the expense. Please try again.");
+        return;
+    }
+
+    await loadExpenses();
+
+    closeExpenseModal();
+
+    // Tell other frontend pages that expenses changed.
+    window.dispatchEvent(
+        new CustomEvent("expensesUpdated")
+    );
+}
+
+async function editExpense(id) {
+
+    const expense = expenses.find(item => item.id === id);
+
+    if (!expense) {
+        return;
+    }
+
+    editingId = id;
+
+    document.getElementById("modalTitle").textContent =
+        "Edit Expense";
+
+    document.getElementById("expenseAmount").value =
+        expense.amount;
+
+    document.getElementById("expenseCategory").value =
+        expense.categoryId;
+
+    document.getElementById("expenseDate").value =
+        expense.date;
+
+    document.getElementById("expenseDescription").value =
+        expense.description;
+
+    document
+        .getElementById("expenseModal")
+        .classList.add("show");
+}
+
+async function deleteExpense(id) {
+
+    const expense = expenses.find(item => item.id === id);
+
+    if (!expense) {
+        return;
+    }
+
+    const confirmed =
+        confirm(
+            `Delete ${expense.description} (${formatCurrency(expense.amount)})?`
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const response = await apiFetch(`/Expense/Delete/${id}`, {
+        method: "DELETE"
+    });
+
+    if (!response.ok && response.status !== 404) {
+        alert("Could not delete the expense. Please try again.");
+        return;
+    }
+
+    await loadExpenses();
+
+    window.dispatchEvent(
+        new CustomEvent("expensesUpdated")
+    );
 }
 
 function filterExpenses() {
 
     const search =
         document.getElementById("expenseSearch")
-            .value
-            .toLowerCase();
+            ?.value
+            .toLowerCase() || "";
 
     const category =
-        document.getElementById("categoryFilter").value;
+        document.getElementById("categoryFilter")
+            ?.value || "";
 
     const rows =
-        document.querySelectorAll("#expenseTable tr");
+        document.querySelectorAll(
+            "#expenseTable tr"
+        );
 
     rows.forEach(row => {
 
-        const text = row.textContent.toLowerCase();
-        const rowCategory = row.dataset.category;
+        const text =
+            row.textContent.toLowerCase();
 
-        const matchesSearch = text.includes(search);
+        const rowCategory =
+            row.dataset.category;
+
+        const matchesSearch =
+            text.includes(search);
+
         const matchesCategory =
-            !category || rowCategory === category;
+            !category ||
+            rowCategory === category;
 
         row.style.display =
             matchesSearch && matchesCategory
                 ? ""
                 : "none";
     });
+
+    updateCount();
 }
 
 function updateCount() {
 
     const rows =
-        document.querySelectorAll("#expenseTable tr");
-
-    const visibleRows =
-        [...rows].filter(row =>
-            row.style.display !== "none"
+        document.querySelectorAll(
+            "#expenseTable tr"
         );
 
-    document.getElementById("expenseCount").textContent =
-        `${visibleRows.length} transactions`;
+    const visibleRows =
+        [...rows].filter(
+            row => row.style.display !== "none"
+        );
+
+    const count =
+        document.getElementById("expenseCount");
+
+    if (count) {
+
+        count.textContent =
+            `${visibleRows.length} transactions`;
+    }
 }
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        loadCategories().then(loadExpenses);
+
+        const modal =
+            document.getElementById("expenseModal");
+
+        if (modal) {
+
+            modal.addEventListener(
+                "click",
+                event => {
+
+                    if (
+                        event.target === modal
+                    ) {
+                        closeExpenseModal();
+                    }
+                }
+            );
+        }
+    }
+);

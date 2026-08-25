@@ -1,35 +1,70 @@
-let currentBudget = 15000;
-const totalSpent = 12450;
-const predictedSpending = 17800;
+let currentBudget = (window.serverData && window.serverData.budget) || 15000;
+const totalSpent = (window.serverData && window.serverData.totalSpent) || 0;
 
 function formatCurrency(value) {
     return "₹" + Number(value).toLocaleString("en-IN");
 }
 
 function openBudgetModal() {
+    const modal = document.getElementById("budgetModal");
+
     document.getElementById("newBudget").value = currentBudget;
-    document.getElementById("budgetModal").classList.add("show");
+
+    modal.style.display = "flex";
+    modal.classList.add("show");
 }
 
 function closeBudgetModal() {
-    document.getElementById("budgetModal").classList.remove("show");
+    const modal = document.getElementById("budgetModal");
+
+    modal.classList.remove("show");
+    modal.style.display = "none";
 }
 
-function updateBudget(event) {
+async function updateBudget(event) {
     event.preventDefault();
 
-    const newBudget =
-        Number(document.getElementById("newBudget").value);
+    const input = document.getElementById("newBudget");
+    const newBudget = Number(input.value);
 
     if (!newBudget || newBudget <= 0) {
         return;
     }
 
-    currentBudget = newBudget;
+    try {
 
-    refreshBudgetUI();
+        const response = await fetch("/Dashboard/SetBudget", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ budgetAmount: newBudget })
+        });
 
-    closeBudgetModal();
+        if (response.status === 401) {
+            window.location.href = "/Account/Login";
+            return;
+        }
+
+        if (!response.ok) {
+            alert("Could not save your budget. Please try again.");
+            return;
+        }
+
+        currentBudget = newBudget;
+
+        refreshBudgetUI();
+
+    } catch {
+        alert("Could not save your budget. Please try again.");
+        return;
+    }
+
+    // Save and immediately close the modal
+    const modal = document.getElementById("budgetModal");
+    modal.classList.remove("show");
+    modal.style.display = "none";
+
+    // Clear the input
+    input.value = "";
 }
 
 function refreshBudgetUI() {
@@ -46,9 +81,7 @@ function refreshBudgetUI() {
         formatCurrency(Math.max(remaining, 0));
 
     document.getElementById("budgetPercentage").textContent =
-        remaining >= 0
-            ? Math.round((remaining / currentBudget) * 100) + "% remaining"
-            : "Budget exceeded";
+        Math.round(percentage) + "% of budget";
 
     document.getElementById("budgetProgress").style.width =
         Math.min(percentage, 100) + "%";
@@ -59,11 +92,6 @@ function refreshBudgetUI() {
     document.getElementById("budgetLabel").textContent =
         formatCurrency(currentBudget) + " budget";
 
-    const difference =
-        predictedSpending - currentBudget;
-
-    document.getElementById("predictionDifference").textContent =
-        formatCurrency(Math.abs(difference));
 
     const alert = document.getElementById("budgetAlert");
     const alertText = document.getElementById("budgetAlertText");
@@ -101,3 +129,8 @@ function refreshBudgetUI() {
 }
 
 document.addEventListener("DOMContentLoaded", refreshBudgetUI);
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    refreshBudgetUI();
+});

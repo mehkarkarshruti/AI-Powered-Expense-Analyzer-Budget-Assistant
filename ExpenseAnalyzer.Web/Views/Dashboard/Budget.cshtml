@@ -1,120 +1,216 @@
 @{
-    ViewData["Title"] = "Budget Management";
+    ViewData["Title"] = "Budget";
 }
 
 <div class="dashboard">
+
     <div class="page-heading">
         <div>
-            <h1>Budget Planning</h1>
-            <p>Set limits and track your monthly spending.</p>
+            <h1>Budget</h1>
+            <p>Manage your monthly spending limit.</p>
         </div>
     </div>
 
-    <div class="dashboard-card form-card">
-        <h3>Set Budget Limit</h3>
-        <form id="budgetForm" class="budget-form">
-            <div class="form-group">
-                <label for="categoryId">Category (Optional)</label>
-                <select id="categoryId" class="form-control">
-                    <option value="">Overall Monthly Budget</option>
-                    <option value="1">Food & Dining</option>
-                    <option value="2">Transportation</option>
-                    <option value="3">Entertainment</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="budgetAmount">Budget Amount (₹)</label>
-                <input type="number" id="budgetAmount" class="form-control" required min="1" step="1" />
+    <div class="summary-grid">
+
+        <div class="summary-card">
+            <div class="card-top">
+                <span>Monthly Budget</span>
+                <div class="card-icon blue">₹</div>
             </div>
 
-            <button type="submit" class="primary-btn">Save Budget Limit</button>
-        </form>
+            <h2 id="budgetAmount">@ViewBag.BudgetFormatted</h2>
+            <p>Current month</p>
+        </div>
+
+        <div class="summary-card">
+            <div class="card-top">
+                <span>Total Spent</span>
+                <div class="card-icon purple">₹</div>
+            </div>
+
+            <h2>@ViewBag.SpentFormatted</h2>
+            <p id="budgetPercentage">@ViewBag.Percentage% of budget used</p>
+        </div>
+
+        <div class="summary-card">
+            <div class="card-top">
+                <span>Remaining</span>
+                <div class="card-icon green">✓</div>
+            </div>
+
+            <h2 id="remainingAmount">@ViewBag.RemainingFormatted</h2>
+            <p>Available to spend</p>
+        </div>
+
     </div>
 
-    <div class="dashboard-card budget-page-card" id="budgetProgressContainer" style="display:none;">
+    <div class="dashboard-card budget-page-card">
+
         <div class="section-header">
             <div>
-                <h3 id="progressTitle">Monthly Budget Progress</h3>
-                <p id="progressSubtitle"></p>
+                <h3>Monthly Budget Progress</h3>
+                <p>@ViewBag.MonthLabel</p>
             </div>
         </div>
 
         <div class="budget-progress large-progress">
-            <div id="progressBar" style="width:0%"></div>
+            <div id="budgetProgress" style="width:@(ViewBag.Percentage)%"></div>
         </div>
 
         <div class="budget-labels">
-            <span id="spentLabel">₹0 spent</span>
-            <span id="budgetLabel">₹0 budget</span>
+            <span id="spentLabel">@ViewBag.SpentFormatted spent</span>
+            <span id="budgetLabel">@ViewBag.BudgetFormatted budget</span>
         </div>
 
-        <div id="alertBanner" class="dashboard-alert warning-alert budget-page-alert" style="display:none;">
+        <div id="budgetAlert"
+             class="dashboard-alert @ViewBag.ProgressClass budget-page-alert">
+
             <div class="dashboard-alert-icon">!</div>
+
+
             <div>
-                <strong id="alertStrong">Approaching Limit</strong>
-                <p id="alertMsg"></p>
+                <strong id="budgetAlertTitle"></strong>
+                <p id="budgetAlertText"></p>
             </div>
         </div>
+
+        <button class="budget-update-btn" onclick="openBudgetModal()">
+            Update Monthly Budget
+        </button>
+
+    </div>
+
+</div>
+
+<!-- BUDGET MODAL -->
+
+<div class="expense-modal" id="budgetModal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>Update Budget</h2>
+                <p>Set your monthly spending limit.</p>
+            </div>
+
+            <button type="button" class="close-btn" onclick="closeBudgetModal()">×</button>
+
+        </div>
+
+        <form onsubmit="updateBudget(event)">
+
+            <div class="form-group">
+
+                <label>Monthly Budget</label>
+
+                <input
+                    type="number"
+                    id="newBudget"
+                    min="1"
+                    placeholder="Enter amount"
+                    required />
+
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="secondary-btn"
+                    onclick="closeBudgetModal()">
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="primary-btn">
+                    Save Budget
+                </button>
+
+            </div>
+
+        </form>
+
     </div>
 
 </div>
 
 @section Scripts {
     <script>
-        document.getElementById('budgetForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            const categoryId = document.getElementById('categoryId').value;
-            const amount = document.getElementById('budgetAmount').value;
-            const token = localStorage.getItem('token'); // assuming token is stored here
-            
-            const payload = {
-                categoryId: categoryId ? parseInt(categoryId) : null,
-                month: new Date().getMonth() + 1,
-                year: new Date().getFullYear(),
-                budgetAmount: parseFloat(amount)
-            };
+        const currentBudget = @((decimal)(ViewBag.BudgetRaw ?? 0m));
+        const totalSpent = @((decimal)(ViewBag.SpentRaw ?? 0m));
 
-            fetch('https://localhost:7198/api/Budget', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                },
-                body: JSON.stringify(payload)
-            })
-            .then(res => {
-                if (res.ok) {
-                    alert('Budget updated successfully!');
-                    loadBudgetStatus();
-                } else {
-                    alert('Failed to update budget.');
-                }
-            })
-            .catch(err => console.error(err));
-        });
-
-        function loadBudgetStatus() {
-            const token = localStorage.getItem('token');
-            if(!token) return;
-
-            fetch('https://localhost:7198/api/Budget/status', {
-                 headers: { 'Authorization': 'Bearer ' + token }
-            })
-            .then(res => res.json())
-            .then(data => {
-                const container = document.getElementById('budgetProgressContainer');
-                if (data.budget) {
-                    container.style.display = 'block';
-                    document.getElementById('progressSubtitle').innerText = `${data.budget.month}/${data.budget.year}`;
-                    
-                    // Note: Would need to fetch current spend. Mocking here or relying on API changes.
-                    // This is placeholder presentation matching the MVC requirement
-                    document.getElementById('budgetLabel').innerText = `₹${data.budget.budgetAmount} budget`;
-                }
-            });
+        function openBudgetModal() {
+            const modal = document.getElementById("budgetModal");
+            document.getElementById("newBudget").value = currentBudget || "";
+            modal.style.display = "flex";
+            modal.classList.add("show");
         }
-        
-        loadBudgetStatus();
+
+        function closeBudgetModal() {
+            const modal = document.getElementById("budgetModal");
+            modal.classList.remove("show");
+            modal.style.display = "none";
+            setTimeout(() => { modal.style.display = ""; }, 10);
+        }
+
+        async function updateBudget(event) {
+            event.preventDefault();
+
+            const input = document.getElementById("newBudget");
+            const newBudget = Number(input.value);
+
+            if (!newBudget || newBudget <= 0) {
+                return;
+            }
+
+            try {
+                const response = await fetch("/Dashboard/SetBudget", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ budgetAmount: newBudget })
+                });
+
+                if (response.status === 401) {
+                    window.location.href = "/Account/Login";
+                    return;
+                }
+
+                if (!response.ok) {
+                    alert("Could not save your budget. Please try again.");
+                    return;
+                }
+            } catch {
+                alert("Could not save your budget. Please try again.");
+                return;
+            }
+
+            window.location.reload();
+        }
+
+        (function fillAlert() {
+            const pct = @(ViewBag.Percentage);
+            const title = document.getElementById("budgetAlertTitle");
+            const text = document.getElementById("budgetAlertText");
+
+            if (!title || !text) return;
+
+            if (@(ViewBag.BudgetRaw ?? 0m) <= 0) {
+                title.textContent = "No budget set";
+                text.textContent = "Set a monthly budget to start tracking.";
+            } else if (pct >= 100) {
+                title.textContent = "Budget exceeded";
+                text.textContent = "You have spent more than your monthly budget.";
+            } else if (pct >= 80) {
+                title.textContent = "80% Budget Warning";
+                text.textContent = "You have used " + pct + "% of your monthly budget.";
+            } else {
+                title.textContent = "On track";
+                text.textContent = "You have used " + pct + "% of your monthly budget.";
+            }
+        })();
     </script>
 }

@@ -18,7 +18,7 @@
                 <span>Current Spending</span>
                 <div class="card-icon purple">₹</div>
             </div>
-            <h2>₹12,450</h2>
+            <h2>@ViewBag.CurrentSpent</h2>
             <p>This month</p>
         </div>
 
@@ -27,7 +27,7 @@
                 <span>Predicted Spending</span>
                 <div class="card-icon orange">↗</div>
             </div>
-            <h2>₹17,800</h2>
+            <h2>@ViewBag.Predicted</h2>
             <p>Expected monthly total</p>
         </div>
 
@@ -36,7 +36,7 @@
                 <span>Budget</span>
                 <div class="card-icon blue">₹</div>
             </div>
-            <h2>₹15,000</h2>
+            <h2>@ViewBag.BudgetFormatted</h2>
             <p>Monthly limit</p>
         </div>
 
@@ -53,16 +53,35 @@
             </div>
         </div>
 
-        <div class="prediction-value">
-            <span>Expected monthly spending</span>
-            <strong>₹17,800</strong>
-        </div>
+        @if ((bool)ViewBag.HasPrediction)
+        {
+            <div class="prediction-value">
+                <span>Expected monthly spending</span>
+                <strong>@ViewBag.Predicted</strong>
+            </div>
 
-        <div class="prediction-warning">
-            ⚠ The predicted spending is
-            <strong>₹2,800 above your budget.</strong>
-            Consider reducing discretionary spending.
-        </div>
+            @if ((bool)ViewBag.Exceeds)
+            {
+                <div class="prediction-warning">
+                    ⚠ The predicted spending is above your budget.
+                    Consider reducing discretionary spending.
+                </div>
+            }
+            else
+            {
+                <div class="prediction-warning">
+                    ✓ You are projected to stay within your budget this month.
+                </div>
+            }
+        }
+        else
+        {
+            <p class="empty-state" style="padding: 24px 0;">
+                No prediction is available yet. Record expenses and set a
+                monthly budget — the forecast appears once there is enough
+                spending history.
+            </p>
+        }
 
     </div>
 

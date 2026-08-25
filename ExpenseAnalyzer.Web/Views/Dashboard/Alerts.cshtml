@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"] = "Alert Notifications";
+    ViewData["Title"] = "Alerts";
 }
 
 <div class="dashboard">
@@ -7,85 +7,71 @@
     <div class="page-heading">
         <div>
             <h1>Alerts</h1>
-            <p>Important notifications about your spending thresholds.</p>
+            <p>Important notifications about your spending.</p>
         </div>
     </div>
 
-    <div class="alert-list" id="alertsContainer">
-        <p>Loading alerts...</p>
+    <div class="alert-list">
+
+        @if (ViewBag.Alerts is List<string> { Count: > 0 } alerts)
+        {
+            @foreach (var alert in alerts)
+            {
+                <div class="dashboard-alert warning-alert">
+                    <div class="dashboard-alert-icon">!</div>
+
+                    <div>
+                        <strong>Budget Alert</strong>
+                        <p>@alert</p>
+                    </div>
+                </div>
+            }
+        }
+
+        @if (ViewBag.PredictionWarning is string warning)
+        {
+            <div class="dashboard-alert danger-alert">
+                <div class="dashboard-alert-icon">!</div>
+
+                <div>
+                    <strong>Prediction Warning</strong>
+                    <p>@warning</p>
+                </div>
+            </div>
+        }
+
+        @if ((ViewBag.Alerts is List<string> a && a.Count == 0) && ViewBag.PredictionWarning is null)
+        {
+            @if ((bool)ViewBag.HasExpenses)
+            {
+                <div class="dashboard-alert success-alert">
+                    <div class="dashboard-alert-icon">✓</div>
+
+                    <div>
+                        <strong>All Good</strong>
+                        <p>
+                            No budget alerts for @ViewBag.MonthLabel.
+                            You are within your spending limits.
+                        </p>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="dashboard-alert success-alert">
+                    <div class="dashboard-alert-icon">✓</div>
+
+                    <div>
+                        <strong>No Alerts Yet</strong>
+                        <p>
+                            Add expenses and set a monthly budget to
+                            start receiving spending alerts.
+                        </p>
+                    </div>
+                </div>
+            }
+        }
+
     </div>
 
 </div>
-
-@section Scripts {
-    <script>
-        function loadAlerts() {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                document.getElementById('alertsContainer').innerHTML = "<p>Please login to view alerts.</p>";
-                return;
-            }
-
-            fetch('https://localhost:7198/api/Alerts/unread', {
-                headers: { 'Authorization': 'Bearer ' + token }
-            })
-            .then(res => res.json())
-            .then(data => {
-                const container = document.getElementById('alertsContainer');
-                container.innerHTML = '';
-                
-                if (!data || data.length === 0) {
-                    container.innerHTML = '<div class="dashboard-alert success-alert"><div class="dashboard-alert-icon">✓</div><div><strong>All good!</strong><p>You have no new alerts.</p></div></div>';
-                    return;
-                }
-
-                data.forEach(alert => {
-                    let alertClass = 'warning-alert';
-                    let icon = '!';
-                    let title = 'Budget Warning';
-                    
-                    if (alert.alertType.includes('100')) {
-                        alertClass = 'danger-alert';
-                        title = 'Budget Exceeded';
-                    } else if (alert.alertType.includes('PREDICTIVE')) {
-                        alertClass = 'warning-alert'; // or some info style
-                        title = 'Prediction Warning';
-                    }
-
-                    const alertDiv = document.createElement('div');
-                    alertDiv.className = `dashboard-alert ${alertClass}`;
-                    
-                    alertDiv.innerHTML = `
-                        <div class="dashboard-alert-icon">${icon}</div>
-                        <div style="flex-grow: 1;">
-                            <strong>${title}</strong>
-                            <p>${alert.message}</p>
-                        </div>
-                        <button class="primary-btn" style="padding: 5px 10px; font-size: 0.8rem;" onclick="markRead(${alert.alertId})">Mark Read</button>
-                    `;
-                    container.appendChild(alertDiv);
-                });
-            })
-            .catch(err => {
-                console.error(err);
-                document.getElementById('alertsContainer').innerHTML = "<p>Failed to load alerts.</p>";
-            });
-        }
-
-        window.markRead = function(alertId) {
-            const token = localStorage.getItem('token');
-            fetch(`https://localhost:7198/api/Alerts/${alertId}/read`, {
-                method: 'POST',
-                headers: { 'Authorization': 'Bearer ' + token }
-            })
-            .then(res => {
-                if (res.ok) {
-                    loadAlerts();
-                }
-            })
-            .catch(err => console.error(err));
-        };
-
-        loadAlerts();
-    </script>
-}

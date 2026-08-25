@@ -1,21 +1,27 @@
-using ExpenseAnalyzer.Web.Services;
-
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// MVC
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddHttpClient();
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession();
+// Backend API client (token is attached per-request by controllers)
+builder.Services.AddHttpClient("Api", client =>
+{
+    client.BaseAddress = new Uri(
+        builder.Configuration["ApiBaseUrl"] ?? "http://localhost:5240/api/");
+});
 
-// Register ApiService
-builder.Services.AddScoped<ApiService>();
+// Session for auth state (JWT kept server-side, never exposed to the browser)
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(2);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -23,15 +29,21 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseRouting();
-app.UseSession();
-app.UseAuthorization();
 
-app.MapStaticAssets();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseSession();
+
+
+app.MapControllerRoute(
+    name: "dashboard_short",
+    pattern: "Dashboard",
+    defaults: new { controller = "Dashboard", action = "Index" });
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Dashboard}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();
