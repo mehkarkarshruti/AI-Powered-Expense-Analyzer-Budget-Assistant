@@ -1,0 +1,28 @@
+# Base image for Web Frontend runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
+WORKDIR /app
+EXPOSE 8080
+ENV ASPNETCORE_URLS=http://0.0.0.0:8080
+
+# Build environment requires matching .NET 10 SDK
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+WORKDIR /src
+
+# Copy Web Project specifics
+COPY ["ExpenseAnalyzer.Web/ExpenseAnalyzer.Web.csproj", "ExpenseAnalyzer.Web/"]
+RUN dotnet restore "ExpenseAnalyzer.Web/ExpenseAnalyzer.Web.csproj"
+
+# Build Web Application
+COPY ["ExpenseAnalyzer.Web/", "ExpenseAnalyzer.Web/"]
+WORKDIR "/src/ExpenseAnalyzer.Web"
+RUN dotnet build "ExpenseAnalyzer.Web.csproj" -c Release -o /app/build/web
+
+# Publish Web Application
+FROM build AS publishweb
+RUN dotnet publish "ExpenseAnalyzer.Web.csproj" -c Release -o /app/publish/web
+
+# Start Web execution natively
+FROM base AS final
+WORKDIR /app
+COPY --from=publishweb /app/publish/web .
+ENTRYPOINT ["dotnet", "ExpenseAnalyzer.Web.dll"]
