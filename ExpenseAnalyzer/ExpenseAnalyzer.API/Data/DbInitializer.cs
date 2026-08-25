@@ -1,4 +1,5 @@
 using ExpenseAnalyzer.API.Models;
+using System.IO;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseAnalyzer.API.Data
@@ -11,6 +12,20 @@ namespace ExpenseAnalyzer.API.Data
 
             if (isSqlite)
             {
+                // Ensure the database folder exists (e.g. /data on Render disks,
+                // or the app folder when running without a mounted disk).
+                var connectionString = context.Database.GetConnectionString() ?? "";
+                const string prefix = "Data Source=";
+                if (connectionString.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                {
+                    var dbPath = connectionString[prefix.Length..].Trim();
+                    var directory = Path.GetDirectoryName(dbPath);
+                    if (!string.IsNullOrEmpty(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
+                }
+
                 // SQLite (cloud deployments): migrations are SQL Server-specific,
                 // so create the schema directly from the current model instead.
                 await context.Database.EnsureCreatedAsync();
