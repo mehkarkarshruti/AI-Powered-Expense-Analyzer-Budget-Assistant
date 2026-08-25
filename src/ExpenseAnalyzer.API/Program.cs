@@ -3,6 +3,7 @@ using ExpenseAnalyzer.Core.Interfaces;
 using ExpenseAnalyzer.Infrastructure.Data;
 using ExpenseAnalyzer.ML;
 using ExpenseAnalyzer.API.Services;
+using ExpenseAnalyzer.API.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -54,8 +55,15 @@ builder.Services.AddScoped<IPredictionEngine, PredictionService>();
 // Dependency Injection Registration for Analytics Module
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
-// Unused dependency registrations removed
-
+// Dependency Injection for Auth, Budget, and Expense abstractions
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IExpenseService, ExpenseService>();
+builder.Services.AddScoped<IBudgetService, BudgetService>();
+builder.Services.AddScoped<IAlertService, AlertService>();
+builder.Services.AddScoped<IBudgetRepository, BudgetRepository>();
+builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddHttpClient();
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var secretKey = jwtSettings["Secret"] ?? "SuperSecretKeyEnsureMinimumOfThirtyTwoBytesForHS256!!!";
 

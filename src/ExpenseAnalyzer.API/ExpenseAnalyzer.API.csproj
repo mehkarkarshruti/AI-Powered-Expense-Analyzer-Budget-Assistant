@@ -10,6 +10,7 @@
     <ProjectReference Include="..\ExpenseAnalyzer.Core\ExpenseAnalyzer.Core.csproj" />
     <ProjectReference Include="..\ExpenseAnalyzer.Infrastructure\ExpenseAnalyzer.Infrastructure.csproj" />
     <ProjectReference Include="..\ExpenseAnalyzer.ML\ExpenseAnalyzer.ML.csproj" />
+    <ProjectReference Include="..\..\ExpenseAnalyzer\ExpenseAnalyzer.API\ExpenseAnalyzer.API.csproj" />
   </ItemGroup>
 
   <ItemGroup>

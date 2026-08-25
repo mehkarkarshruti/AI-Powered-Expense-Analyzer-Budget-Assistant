@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseAnalyzer.API.Services
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         private readonly AppDbContext _context;
         private readonly JwtService _jwtService;
