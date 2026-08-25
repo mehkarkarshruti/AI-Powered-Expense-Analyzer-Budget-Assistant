@@ -6,6 +6,7 @@ using ExpenseAnalyzer.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -25,6 +26,14 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             if (descriptor != null)
             {
                 services.Remove(descriptor);
+            }
+
+            var configurationDescriptor = services.SingleOrDefault(
+                d => d.ServiceType == typeof(IDbContextOptionsConfiguration<AppDbContext>));
+
+            if (configurationDescriptor != null)
+            {
+                services.Remove(configurationDescriptor);
             }
 
             services.AddDbContext<AppDbContext>(options =>

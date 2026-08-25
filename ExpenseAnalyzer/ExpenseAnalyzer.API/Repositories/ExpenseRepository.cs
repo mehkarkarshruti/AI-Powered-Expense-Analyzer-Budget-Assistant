@@ -20,6 +20,15 @@ namespace ExpenseAnalyzer.API.Repositories
                 .FirstOrDefaultAsync(e => e.ExpenseId == id && e.UserId == userId);
         }
 
+        public async Task<IEnumerable<Expense>> GetByUserIdAsync(int userId)
+        {
+            return await _context.Expenses
+                .Where(e => e.UserId == userId)
+                .Include(e => e.Category)
+                .OrderByDescending(e => e.ExpenseDate)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Expense>> GetAllByUserIdAsync(int userId)
         {
             return await _context.Expenses
@@ -69,11 +78,17 @@ namespace ExpenseAnalyzer.API.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<decimal> GetTotalSpentAsync(int userId, int month, int year)
+        public async Task<decimal> GetTotalSpentAsync(int userId, int? categoryId, int month, int year)
         {
-            return await _context.Expenses
-                .Where(e => e.UserId == userId && e.ExpenseDate.Month == month && e.ExpenseDate.Year == year)
-                .SumAsync(e => (decimal?)e.Amount) ?? 0;
+            var query = _context.Expenses
+                .Where(e => e.UserId == userId && e.ExpenseDate.Month == month && e.ExpenseDate.Year == year);
+
+            if (categoryId.HasValue)
+            {
+                query = query.Where(e => e.CategoryId == categoryId.Value);
+            }
+
+            return await query.SumAsync(e => (decimal?)e.Amount) ?? 0;
         }
     }
 }

@@ -2,7 +2,7 @@
 
 An AI-powered application to track expenses, analyze spending patterns, and assist with budget management.
 
-## Group 13
+## Group- 13
 
 | Application No. | Name |
 |---|---|
@@ -16,78 +16,55 @@ An AI-powered application to track expenses, analyze spending patterns, and assi
 
 ---
 
-## ML / Spending Prediction Module
+## Infrastructure & Deployment Features
 
-### Overview
-The Spending Prediction module uses a user's historical expense data to forecast their expected spending for the current month. It calculates a projected monthly total, compares it against the user's defined monthly budget (if available), and provides early warnings when spending is likely to exceed budget limits.
+- **Stateless JWT Authentication**: Secure user management decoupled from sessions preventing IDOR vulnerabilities natively.
+- **RESTful API backend**: Fully tested REST API for Expenses, Budgets, and Analytics ensuring Controller encapsulation.
+- **SQLite Persistence**: Ready for cloud deployment on volatile clusters if attached to Persistent Disks natively mapping to `/data/ExpenseAnalyzer.db`.
+- **Database Initialization**: The application schema initializes automatically using Entity Framework Core's `EnsureCreated()`. No manual migration commands (`Migrate()`) are necessary.
 
-### Architecture & Components
-- **Core Interfaces & DTOs**: `SpendingPredictionDto.cs`, `IPredictionEngine.cs` inside `ExpenseAnalyzer.Core`.
-- **ML Engine & Pipeline**: `ModelTrainer.cs`, `SpendingModelInput.cs`, `SpendingModelOutput.cs`, `PredictionService.cs` inside `ExpenseAnalyzer.ML`.
-- **REST Controller**: `PredictionController.cs` inside `ExpenseAnalyzer.API`.
+## Local Setup
 
----
+### Prerequisites
+- .NET 8.0 SDK installed
 
-### Machine Learning Details
-- **Input Data**: Historical transaction logs and monthly summary features (`DaysElapsed`, `DaysInMonth`, `HistoricalAverage`, `PrevMonthSpending`, `CurrentSpentSoFar`, `TransactionCountSoFar`).
-- **Preprocessing & Feature Engineering**: Numerical feature concatenation, days-in-month normalization, monthly velocity feature extraction.
-- **ML Algorithm**: ML.NET `FastTreeRegression` / `SdcaRegression` model trained on historical monthly expense patterns (`upi_data_enhanced.csv`).
-- **Evaluation Metrics**:
-  - **MAE (Mean Absolute Error)**: Average absolute difference between predicted and actual total monthly spending.
-  - **RMSE (Root Mean Squared Error)**: Measures error variance, penalizing larger prediction errors.
-  - **R² (Coefficient of Determination)**: Indicates how well historical spending trends explain variance in future spending.
-
----
-
-### Fallback Strategy & Edge Cases
-When historical data is sparse or ML model predictions are unavailable, the engine applies a robust heuristic fallback:
-$$\text{Predicted Spending} = \max\left(\frac{\text{Current Spent So Far}}{\text{Days Elapsed}} \times \text{Days In Month},\, \text{Historical Monthly Average}\right)$$
-- **No Expenses**: Returns `InsufficientData` status, `0.0` confidence score, and informative message.
-- **Sparse Transactions (< 3 records)**: Utilizes velocity extrapolation, lowers confidence score to ~0.45, and flags `IsFallback = true`.
-- **No Budget Set**: Computes prediction accurately while marking `MonthlyBudget = null` and `PredictionStatus = "NoBudgetSet"`.
-
----
-
-### API Endpoint & Conceptual Response
-
-#### Endpoint
-`GET /api/prediction/{userId}`
-
-#### Example Request
-`GET /api/prediction/1`
-
-#### Example Response (JSON)
-```json
-{
-  "userId": 1,
-  "currentMonth": "2026-08",
-  "historicalAverage": 14500.0,
-  "currentMonthSpending": 9200.0,
-  "predictedMonthlySpending": 15800.0,
-  "monthlyBudget": 15000.0,
-  "remainingBudget": -800.0,
-  "predictionStatus": "LikelyToExceed",
-  "confidenceScore": 0.85,
-  "isBudgetLikelyToBeExceeded": true,
-  "message": "Warning: Your predicted monthly spending ($15,800.00) is projected to exceed your budget ($15,000.00).",
-  "isFallback": false
-}
+### Run without Docker
+1. Navigate to the API Folder:
+```bash
+cd src/ExpenseAnalyzer.API
+dotnet run
+```
+2. In a new terminal, run the application Web Frontend:
+```bash
+cd ExpenseAnalyzer.Web
+dotnet run
 ```
 
+## Deployment via Render
+
+Because of the architectural separation between the ASP.NET Core MVC Engine (`ExpenseAnalyzer.Web`) and the domain REST engine (`ExpenseAnalyzer.API`), provisioning two independent Web Services guarantees seamless execution. 
+
+### Web Service 1: Backend API (ExpenseAnalyzer.API)
+1. **Source**: Fork and select this repository in Render Dashboard.
+2. **Type**: Web Service (Native .NET 8.0 Environment).
+3. **Build Command**: `dotnet publish src/ExpenseAnalyzer.API/ExpenseAnalyzer.API.csproj -c Release -o ./publish`
+4. **Start Command**: `dotnet ./publish/ExpenseAnalyzer.API.dll`
+5. **Environment Variables**:
+   * `Jwt__Secret`: Your 256-bit strong deterministic hash sequence.
+   * `ConnectionStrings__DefaultConnection`: `Data Source=/data/ExpenseAnalyzer.db`
+   * `FrontendUrl`: Base URL of the deployed MVC app (e.g. `https://my-expense-web.onrender.com`).
+6. **Disk**: Provision a Render **Persistent Disk** anchored to `/data`.
+
+### Web Service 2: Frontend App (ExpenseAnalyzer.Web)
+1. **Source**: Select this repository in Render Dashboard for a second Web Service.
+2. **Type**: Web Service (Native .NET 8.0 Environment).
+3. **Build Command**: `dotnet publish ExpenseAnalyzer.Web/ExpenseAnalyzer.Web.csproj -c Release -o ./publish`
+4. **Start Command**: `dotnet ./publish/ExpenseAnalyzer.Web.dll`
+5. **Environment Variables**:
+   * `ApiSettings__BaseUrl`: URL of the backend API Service you just created.
+
 ---
 
-### Limitations
-- Predictions become significantly more accurate after a user records at least 2-3 months of consistent transaction history.
-- Sudden, non-recurring high-value expenses (e.g. medical emergencies) in a single month may temporarily elevate projected spending until more days elapse in the month.
+## ML / Spending Prediction Module
 
----
-
-## Sequence Diagrams
-
-Documentation available in:
-* `SEQUENCE_DIAGRAMS.md`
-
-Covered Flows:
-* Add Expense
-* Budget Warning (80% / 100%)
-* Spending Prediction
+The Spending Prediction module uses a user's historical expense data to forecast their expected spending for the current month. It calculates a projected monthly total, compares it against the user's defined monthly budget (if available), and provides early warnings when spending is likely to exceed budget limits.

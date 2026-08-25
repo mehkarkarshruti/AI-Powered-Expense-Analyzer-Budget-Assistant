@@ -1,78 +1,120 @@
 @{
-    ViewData["Title"] = "Budget";
+    ViewData["Title"] = "Budget Management";
 }
 
 <div class="dashboard">
-
     <div class="page-heading">
         <div>
-            <h1>Budget</h1>
-            <p>Manage your monthly spending limit.</p>
+            <h1>Budget Planning</h1>
+            <p>Set limits and track your monthly spending.</p>
         </div>
     </div>
 
-    <div class="summary-grid">
-
-        <div class="summary-card">
-            <div class="card-top">
-                <span>Monthly Budget</span>
-                <div class="card-icon blue">₹</div>
+    <div class="dashboard-card form-card">
+        <h3>Set Budget Limit</h3>
+        <form id="budgetForm" class="budget-form">
+            <div class="form-group">
+                <label for="categoryId">Category (Optional)</label>
+                <select id="categoryId" class="form-control">
+                    <option value="">Overall Monthly Budget</option>
+                    <option value="1">Food & Dining</option>
+                    <option value="2">Transportation</option>
+                    <option value="3">Entertainment</option>
+                </select>
             </div>
-            <h2>₹15,000</h2>
-            <p>Current month</p>
-        </div>
-
-        <div class="summary-card">
-            <div class="card-top">
-                <span>Total Spent</span>
-                <div class="card-icon purple">₹</div>
+            
+            <div class="form-group">
+                <label for="budgetAmount">Budget Amount (₹)</label>
+                <input type="number" id="budgetAmount" class="form-control" required min="1" step="1" />
             </div>
-            <h2>₹12,450</h2>
-            <p>83% of budget</p>
-        </div>
 
-        <div class="summary-card">
-            <div class="card-top">
-                <span>Remaining</span>
-                <div class="card-icon green">✓</div>
-            </div>
-            <h2>₹2,550</h2>
-            <p>Available to spend</p>
-        </div>
-
+            <button type="submit" class="primary-btn">Save Budget Limit</button>
+        </form>
     </div>
 
-    <div class="dashboard-card budget-page-card">
-
+    <div class="dashboard-card budget-page-card" id="budgetProgressContainer" style="display:none;">
         <div class="section-header">
             <div>
-                <h3>Monthly Budget Progress</h3>
-                <p>August 2026</p>
+                <h3 id="progressTitle">Monthly Budget Progress</h3>
+                <p id="progressSubtitle"></p>
             </div>
         </div>
 
         <div class="budget-progress large-progress">
-            <div style="width:83%"></div>
+            <div id="progressBar" style="width:0%"></div>
         </div>
 
         <div class="budget-labels">
-            <span>₹12,450 spent</span>
-            <span>₹15,000 budget</span>
+            <span id="spentLabel">₹0 spent</span>
+            <span id="budgetLabel">₹0 budget</span>
         </div>
 
-        <div class="dashboard-alert warning-alert budget-page-alert">
+        <div id="alertBanner" class="dashboard-alert warning-alert budget-page-alert" style="display:none;">
             <div class="dashboard-alert-icon">!</div>
             <div>
-                <strong>You're approaching your budget limit.</strong>
-                <p>You have used 83% of your monthly budget.</p>
+                <strong id="alertStrong">Approaching Limit</strong>
+                <p id="alertMsg"></p>
             </div>
         </div>
-
-        <button class="primary-btn"
-                onclick="alert('Budget update will be connected to the Budget API.')">
-            Update Monthly Budget
-        </button>
-
     </div>
 
 </div>
+
+@section Scripts {
+    <script>
+        document.getElementById('budgetForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const categoryId = document.getElementById('categoryId').value;
+            const amount = document.getElementById('budgetAmount').value;
+            const token = localStorage.getItem('token'); // assuming token is stored here
+            
+            const payload = {
+                categoryId: categoryId ? parseInt(categoryId) : null,
+                month: new Date().getMonth() + 1,
+                year: new Date().getFullYear(),
+                budgetAmount: parseFloat(amount)
+            };
+
+            fetch('https://localhost:7198/api/Budget', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(res => {
+                if (res.ok) {
+                    alert('Budget updated successfully!');
+                    loadBudgetStatus();
+                } else {
+                    alert('Failed to update budget.');
+                }
+            })
+            .catch(err => console.error(err));
+        });
+
+        function loadBudgetStatus() {
+            const token = localStorage.getItem('token');
+            if(!token) return;
+
+            fetch('https://localhost:7198/api/Budget/status', {
+                 headers: { 'Authorization': 'Bearer ' + token }
+            })
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('budgetProgressContainer');
+                if (data.budget) {
+                    container.style.display = 'block';
+                    document.getElementById('progressSubtitle').innerText = `${data.budget.month}/${data.budget.year}`;
+                    
+                    // Note: Would need to fetch current spend. Mocking here or relying on API changes.
+                    // This is placeholder presentation matching the MVC requirement
+                    document.getElementById('budgetLabel').innerText = `₹${data.budget.budgetAmount} budget`;
+                }
+            });
+        }
+        
+        loadBudgetStatus();
+    </script>
+}

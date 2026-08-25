@@ -4,161 +4,157 @@ using ExpenseAnalyzer.API.Repositories;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 
-namespace ExpenseAnalyzer.API.Services
+namespace ExpenseAnalyzer.API.Services;
+
+public class BudgetService(
+    IBudgetRepository budgetRepo,
+    IExpenseRepository expenseRepo,
+    IAlertService alertService,
+    IHttpClientFactory httpClientFactory,
+    ILogger<BudgetService> logger) : IBudgetService
 {
-    public class BudgetService : IBudgetService
+    private readonly HttpClient _httpClient = httpClientFactory.CreateClient("PredictionAPI");
+
+    public async Task<BudgetResponse> CreateOrUpdateBudgetAsync(int userId, CreateBudgetRequest request)
     {
-        private readonly IBudgetRepository _budgetRepo;
-        private readonly IExpenseRepository _expenseRepo;
-        private readonly IAlertRepository _alertRepo;
-        private readonly HttpClient _httpClient;
-        private readonly ILogger<BudgetService> _logger;
-
-        public BudgetService(
-            IBudgetRepository budgetRepo,
-            IExpenseRepository expenseRepo,
-            IAlertRepository alertRepo,
-            IHttpClientFactory httpClientFactory,
-            ILogger<BudgetService> logger)
+        var existing = await budgetRepo.GetBudgetAsync(userId, request.CategoryId, request.Month, request.Year);
+        if (existing != null)
         {
-            _budgetRepo = budgetRepo;
-            _expenseRepo = expenseRepo;
-            _alertRepo = alertRepo;
-            _httpClient = httpClientFactory.CreateClient("PredictionAPI");
-            _logger = logger;
+            existing.BudgetAmount = request.BudgetAmount;
+            existing.UpdatedAt = DateTime.UtcNow;
+            await budgetRepo.UpdateAsync(existing);
+            return MapToResponse(existing);
         }
 
-        public async Task<BudgetResponseDto> SetBudgetAsync(int userId, SetBudgetDto dto)
+        var newBudget = new Budget
         {
-            var existing = await _budgetRepo.GetByUserAndMonthAsync(userId, dto.Month, dto.Year);
-            if (existing != null)
-            {
-                existing.BudgetAmount = dto.BudgetAmount;
-                await _budgetRepo.UpdateAsync(existing);
-                return await GetBudgetAsync(userId, dto.Month, dto.Year) ?? throw new Exception("Failed to retrieve budget.");
-            }
+            UserId = userId,
+            CategoryId = request.CategoryId,
+            Month = request.Month,
+            Year = request.Year,
+            BudgetAmount = request.BudgetAmount,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
 
-            var newBudget = new Budget
-            {
-                UserId = userId,
-                Month = dto.Month,
-                Year = dto.Year,
-                BudgetAmount = dto.BudgetAmount
-            };
+        var created = await budgetRepo.AddAsync(newBudget);
+        return MapToResponse(created);
+    }
 
-            await _budgetRepo.AddAsync(newBudget);
-            return await GetBudgetAsync(userId, dto.Month, dto.Year) ?? throw new Exception("Failed to retrieve budget.");
+    public async Task<BudgetResponse?> GetBudgetAsync(int userId, int? categoryId, byte month, short year)
+    {
+        var budget = await budgetRepo.GetBudgetAsync(userId, categoryId, month, year);
+        if (budget == null) return null;
+        return MapToResponse(budget);
+    }
+
+    public async Task<IEnumerable<BudgetResponse>> GetAllBudgetsAsync(int userId)
+    {
+        var budgets = await budgetRepo.GetAllByUserIdAsync(userId);
+        return budgets.Select(MapToResponse);
+    }
+
+    public async Task DeleteBudgetAsync(int budgetId, int userId)
+    {
+        var budget = await budgetRepo.GetByIdAsync(budgetId, userId);
+        if (budget != null)
+        {
+            await budgetRepo.DeleteAsync(budget);
+        }
+    }
+
+    public async Task CheckBudgetThresholdsAsync(int userId, int? categoryId, DateOnly expenseDate)
+    {
+        byte month = (byte)expenseDate.Month;
+        short year = (short)expenseDate.Year;
+
+        var budget = await budgetRepo.GetBudgetAsync(userId, categoryId, month, year);
+        if (budget == null) return;
+
+        var currentSpending = await expenseRepo.GetTotalSpentAsync(userId, categoryId, month, year);
+        decimal utilization = budget.BudgetAmount > 0 ? (currentSpending / budget.BudgetAmount) : 0;
+
+        string scope = categoryId.HasValue ? "category" : "monthly overall";
+
+        if (utilization >= 1.0m)
+        {
+            await alertService.ValidateAndCreateAlertAsync(userId, budget.BudgetId, AlertType.EXCEEDED_100, 
+                $"Critical: You have breached your {scope} budget of {budget.BudgetAmount:C}. Current spending: {currentSpending:C}");
+        }
+        else if (utilization >= 0.8m)
+        {
+            await alertService.ValidateAndCreateAlertAsync(userId, budget.BudgetId, AlertType.WARNING_80, 
+                $"Warning: You have utilized {utilization:P2} of your {scope} budget. Current spending: {currentSpending:C}");
         }
 
-        public async Task<BudgetResponseDto?> GetBudgetAsync(int userId, byte month, short year)
+        if (!categoryId.HasValue)
         {
-            var budget = await _budgetRepo.GetByUserAndMonthAsync(userId, month, year);
-            if (budget == null) return null;
-
-            var currentSpending = await _expenseRepo.GetTotalSpentAsync(userId, month, year);
-            return new BudgetResponseDto
-            {
-                BudgetId = budget.BudgetId,
-                Month = budget.Month,
-                Year = budget.Year,
-                BudgetAmount = budget.BudgetAmount,
-                CurrentSpending = currentSpending,
-                RemainingBudget = budget.BudgetAmount - currentSpending
-            };
-        }
-
-        public async Task<BudgetStatusDto> GetBudgetStatusAndCheckAlertsAsync(int userId)
-        {
-            var now = DateTime.UtcNow;
-            byte month = (byte)now.Month;
-            short year = (short)now.Year;
-
-            var budgetStatus = new BudgetStatusDto();
-            var budget = await _budgetRepo.GetByUserAndMonthAsync(userId, month, year);
-            
-            // Case A - No Budget: Return state indicating "No Budget" but we can still fetch prediction
-            if (budget == null)
-            {
-                budgetStatus.ActiveAlerts.Add("No budget set for the current month.");
-                budgetStatus.Prediction = await FetchSpendingPredictionAsync(userId);
-                return budgetStatus;
-            }
-
-            var currentSpending = await _expenseRepo.GetTotalSpentAsync(userId, month, year);
-            budgetStatus.Budget = new BudgetResponseDto
-            {
-                BudgetId = budget.BudgetId,
-                Month = budget.Month,
-                Year = budget.Year,
-                BudgetAmount = budget.BudgetAmount,
-                CurrentSpending = currentSpending,
-                RemainingBudget = budget.BudgetAmount - currentSpending
-            };
-
-            // Threshold Calculation
-            decimal utilization = budget.BudgetAmount > 0 ? (currentSpending / budget.BudgetAmount) : 0;
-            
-            if (utilization >= 1.0m) // Case D - Spending Reaches/Exceeds 100%
-            {
-                await ValidateAndCreateAlertAsync(userId, budget.BudgetId, AlertType.EXCEEDED_100, $"Critical: You have exceeded your monthly budget of {budget.BudgetAmount:C}. Current spending: {currentSpending:C}");
-                budgetStatus.ActiveAlerts.Add("Exceeded 100% of Monthly Budget");
-            }
-            else if (utilization >= 0.8m) // Case C - Spending Reaches 80% (but < 100%)
-            {
-                await ValidateAndCreateAlertAsync(userId, budget.BudgetId, AlertType.WARNING_80, $"Warning: You have utilized {utilization:P} of your monthly budget. Current spending: {currentSpending:C}");
-                budgetStatus.ActiveAlerts.Add("Approaching 80% of Monthly Budget");
-            }
-            // Case B - Spending Below 80%: No threshold warning generated.
-
-            // Case E: Predictive Warning Workflow
             var prediction = await FetchSpendingPredictionAsync(userId);
-            if (prediction != null)
+            if (prediction != null && (prediction.IsBudgetLikelyToBeExceeded || prediction.PredictedMonthlySpending > budget.BudgetAmount))
             {
-                budgetStatus.Prediction = prediction;
-                if (prediction.IsBudgetLikelyToBeExceeded || prediction.PredictedMonthlySpending > budget.BudgetAmount)
-                {
-                    await ValidateAndCreateAlertAsync(userId, budget.BudgetId, AlertType.PREDICTIVE, $"Forecast Warning: Projected spending ({prediction.PredictedMonthlySpending:C}) exceeds your budget of {budget.BudgetAmount:C}.");
-                    budgetStatus.ActiveAlerts.Add("Predictive Warning: Budget likely to be exceeded");
-                }
+                await alertService.ValidateAndCreateAlertAsync(userId, budget.BudgetId, AlertType.PREDICTIVE, 
+                    $"Forecast Warning: Projected spending ({prediction.PredictedMonthlySpending:C}) exceeds your budget of {budget.BudgetAmount:C}.");
             }
+        }
+    }
 
+    public async Task<BudgetStatusDto> GetBudgetStatusAndCheckAlertsAsync(int userId)
+    {
+        var now = DateTime.UtcNow;
+        byte month = (byte)now.Month;
+        short year = (short)now.Year;
+
+        var budgetStatus = new BudgetStatusDto();
+        var budget = await budgetRepo.GetBudgetAsync(userId, null, month, year);
+        
+        if (budget == null)
+        {
+            budgetStatus.ActiveAlerts.Add("No overall budget set for the current month.");
+            budgetStatus.Prediction = await FetchSpendingPredictionAsync(userId);
             return budgetStatus;
         }
 
-        private async Task ValidateAndCreateAlertAsync(int userId, int budgetId, AlertType type, string message)
-        {
-            // Do not create duplicated unstructured alerts on same day to avoid spamming
-            var existingAlerts = await _alertRepo.GetAllByUserIdAsync(userId);
-            bool alertExists = existingAlerts.Any(a => a.AlertType == type && a.BudgetId == budgetId && a.CreatedAt.Date == DateTime.UtcNow.Date);
-            
-            if (!alertExists)
-            {
-                await _alertRepo.AddAsync(new Alert
-                {
-                    UserId = userId,
-                    BudgetId = budgetId,
-                    AlertType = type,
-                    Message = message
-                });
-            }
-        }
+        budgetStatus.Budget = MapToResponse(budget);
 
-        private async Task<SpendingPredictionDto?> FetchSpendingPredictionAsync(int userId)
+        await CheckBudgetThresholdsAsync(userId, null, DateOnly.FromDateTime(now));
+
+        var alerts = await alertService.GetUnreadAlertsAsync(userId);
+        budgetStatus.ActiveAlerts.AddRange(alerts.Select(a => $"[{a.AlertType}] {a.Message}"));
+        budgetStatus.Prediction = await FetchSpendingPredictionAsync(userId);
+
+        return budgetStatus;
+    }
+
+    private BudgetResponse MapToResponse(Budget budget)
+    {
+        return new BudgetResponse
         {
-            try
+            BudgetId = budget.BudgetId,
+            UserId = budget.UserId,
+            CategoryId = budget.CategoryId,
+            Month = budget.Month,
+            Year = budget.Year,
+            BudgetAmount = budget.BudgetAmount,
+            CreatedAt = budget.CreatedAt,
+            UpdatedAt = budget.UpdatedAt
+        };
+    }
+
+    private async Task<SpendingPredictionDto?> FetchSpendingPredictionAsync(int userId)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync($"Prediction/{userId}");
+            if (response.IsSuccessStatusCode)
             {
-                var response = await _httpClient.GetAsync($"Prediction/{userId}");
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadFromJsonAsync<SpendingPredictionDto>();
-                }
-                _logger.LogWarning($"Failed to retrieve prediction for user {userId}. Status Code: {response.StatusCode}");
+                return await response.Content.ReadFromJsonAsync<SpendingPredictionDto>();
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "HTTP Request to Prediction API failed.");
-            }
-            return null;
+            logger.LogWarning("Failed to retrieve prediction for user {UserId}. Status Code: {StatusCode}", userId, response.StatusCode);
         }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "HTTP Request to Prediction API failed.");
+        }
+        return null;
     }
 }

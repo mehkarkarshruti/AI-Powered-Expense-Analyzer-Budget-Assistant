@@ -1,11 +1,13 @@
 using ExpenseAnalyzer.API.DTOs;
 
-namespace ExpenseAnalyzer.API.Services
+namespace ExpenseAnalyzer.API.Services;
+
+public interface IBudgetService
 {
-    public interface IBudgetService
-    {
-        Task<BudgetResponseDto> SetBudgetAsync(int userId, SetBudgetDto dto);
-        Task<BudgetResponseDto?> GetBudgetAsync(int userId, byte month, short year);
-        Task<BudgetStatusDto> GetBudgetStatusAndCheckAlertsAsync(int userId);
-    }
+    Task<BudgetResponse> CreateOrUpdateBudgetAsync(int userId, CreateBudgetRequest request);
+    Task<BudgetResponse?> GetBudgetAsync(int userId, int? categoryId, byte month, short year);
+    Task<IEnumerable<BudgetResponse>> GetAllBudgetsAsync(int userId);
+    Task DeleteBudgetAsync(int budgetId, int userId);
+    Task CheckBudgetThresholdsAsync(int userId, int? categoryId, DateOnly expenseDate);
+    Task<BudgetStatusDto> GetBudgetStatusAndCheckAlertsAsync(int userId);
 }
