@@ -1,7 +1,6 @@
 # Base image for Web Frontend runtime
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 WORKDIR /app
-EXPOSE 10000
 
 # Build environment requires matching .NET 10 SDK
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
@@ -24,5 +23,4 @@ RUN dotnet publish "ExpenseAnalyzer.Web.csproj" -c Release -o /app/publish/web
 FROM base AS final
 WORKDIR /app
 COPY --from=publishweb /app/publish/web .
-# Executes with sh -c to expand environment variables safely at runtime
 CMD ["sh", "-c", "dotnet ExpenseAnalyzer.Web.dll --urls http://0.0.0.0:${PORT:-10000}"]

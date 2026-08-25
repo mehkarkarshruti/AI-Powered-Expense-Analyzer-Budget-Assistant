@@ -1,7 +1,6 @@
 # Base processing image for API runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 10000
 
 # Build environment
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
@@ -29,5 +28,4 @@ RUN dotnet publish "ExpenseAnalyzer.API.csproj" -c Release -o /app/publish/api
 FROM base AS final
 WORKDIR /app
 COPY --from=publishapi /app/publish/api .
-# Executes with sh -c to expand environment variables safely at runtime
 CMD ["sh", "-c", "dotnet ExpenseAnalyzer.API.dll --urls http://0.0.0.0:${PORT:-10000}"]
