@@ -303,13 +303,22 @@ public class DashboardController : Controller
             return BadRequest(new { message = "Budget must be positive." });
         }
 
-        var response = await client.PostAsJsonAsync("budget", new
+        HttpResponseMessage response;
+
+        try
         {
-            categoryId = (int?)null,
-            month = DateTime.UtcNow.Month,
-            year = DateTime.UtcNow.Year,
-            budgetAmount = input.budgetAmount
-        });
+            response = await client.PostAsJsonAsync("budget", new
+            {
+                categoryId = (int?)null,
+                month = DateTime.UtcNow.Month,
+                year = DateTime.UtcNow.Year,
+                budgetAmount = input.budgetAmount
+            });
+        }
+        catch
+        {
+            return StatusCode(503, new { message = "Service starting up." });
+        }
 
         if (!response.IsSuccessStatusCode)
         {

@@ -45,7 +45,8 @@ async function updateBudget(event) {
         }
 
         if (!response.ok) {
-            alert("Could not save your budget. Please try again.");
+            const body = await response.json().catch(() => null);
+            alert(body?.message || "Could not save your budget. Please try again.");
             return;
         }
 

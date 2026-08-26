@@ -280,6 +280,11 @@ async function saveExpense(event) {
         });
     }
 
+    if (response.status === 401) {
+        window.location.href = "/Account/Login";
+        return;
+    }
+
     if (!response.ok) {
         alert("Could not save the expense. Please try again.");
         return;
@@ -349,6 +354,11 @@ async function deleteExpense(id) {
     const response = await apiFetch(`/Expense/Delete/${Number(id)}`, {
         method: "DELETE"
     });
+
+    if (response.status === 401) {
+        window.location.href = "/Account/Login";
+        return;
+    }
 
     if (!response.ok && response.status !== 404) {
         alert("Could not delete the expense. Please try again.");

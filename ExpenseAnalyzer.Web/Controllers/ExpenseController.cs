@@ -115,13 +115,22 @@ public class ExpenseController : Controller
             return BadRequest(new { message = "Amount, category and date are required." });
         }
 
-        var response = await client.PostAsJsonAsync("expenses", new
+        HttpResponseMessage response;
+
+        try
         {
-            categoryId = input.categoryId,
-            amount = input.amount,
-            expenseDate = input.date,
-            description = input.description
-        });
+            response = await client.PostAsJsonAsync("expenses", new
+            {
+                categoryId = input.categoryId,
+                amount = input.amount,
+                expenseDate = input.date,
+                description = input.description
+            });
+        }
+        catch
+        {
+            return StatusCode(503, new { message = "Service starting up." });
+        }
 
         if (HandleAuthFailure(response))
         {
@@ -148,13 +157,22 @@ public class ExpenseController : Controller
             return Unauthorized();
         }
 
-        var response = await client.PutAsJsonAsync($"expenses/{id}", new
+        HttpResponseMessage response;
+
+        try
         {
-            categoryId = input.categoryId,
-            amount = input.amount,
-            expenseDate = input.date,
-            description = input.description
-        });
+            response = await client.PutAsJsonAsync($"expenses/{id}", new
+            {
+                categoryId = input.categoryId,
+                amount = input.amount,
+                expenseDate = input.date,
+                description = input.description
+            });
+        }
+        catch
+        {
+            return StatusCode(503, new { message = "Service starting up." });
+        }
 
         if (HandleAuthFailure(response))
         {
@@ -181,7 +199,16 @@ public class ExpenseController : Controller
             return Unauthorized();
         }
 
-        var response = await client.DeleteAsync($"expenses/{id}");
+        HttpResponseMessage response;
+
+        try
+        {
+            response = await client.DeleteAsync($"expenses/{id}");
+        }
+        catch
+        {
+            return StatusCode(503, new { message = "Service starting up." });
+        }
 
         if (HandleAuthFailure(response))
         {
