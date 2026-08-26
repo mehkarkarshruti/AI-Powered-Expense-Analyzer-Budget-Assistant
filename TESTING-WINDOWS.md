@@ -62,3 +62,24 @@ Example create expense:
    Fix pending in `JwtService.GenerateToken`: add `new Claim(ClaimTypes.Role, user.Role)`.
 2. The Web frontend currently in this branch is an older build; a newer UI mock circulates separately.
 3. `.vs/` folders are committed in some places — ignore them; they will be purged later.
+
+## 4. Run the Website (integrated UI)
+
+New terminal window:
+```
+cd ExpenseAnalyzer.Web
+dotnet run
+```
+Open the http://localhost:xxxx URL it prints.
+
+**Register** your own account (no demo login exists), then:
+- Add/edit/delete expenses — stored in the database
+- Set your budget from the Dashboard modal — Alerts/Prediction react live
+- Prediction needs ≥1 expense in the current month (velocity-based forecast)
+
+## Quick start script (both apps)
+```bat
+start cmd /k "cd ExpenseAnalyzer\ExpenseAnalyzer.API && dotnet run"
+timeout /t 8
+start cmd /k "cd ExpenseAnalyzer.Web && dotnet run"
+```
