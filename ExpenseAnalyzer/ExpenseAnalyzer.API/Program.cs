@@ -9,6 +9,14 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Render free instances can exhaust inotify watches; disable config
+// file-watchers (hot-reload isn't needed in production) so startup
+// never creates FileSystemWatcher instances.
+builder.Configuration.Sources.Clear();
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
+builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: false);
+builder.Configuration.AddEnvironmentVariables();
+
 // Controllers
 builder.Services.AddControllers();
 
