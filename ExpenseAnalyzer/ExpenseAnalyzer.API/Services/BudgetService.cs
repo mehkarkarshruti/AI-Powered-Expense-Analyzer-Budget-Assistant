@@ -79,12 +79,12 @@ public class BudgetService(
         if (utilization >= 1.0m)
         {
             await alertService.ValidateAndCreateAlertAsync(userId, budget.BudgetId, AlertType.EXCEEDED_100, 
-                $"Critical: You have breached your {scope} budget of {budget.BudgetAmount:C}. Current spending: {currentSpending:C}");
+                $"Critical: You have breached your {scope} budget of \u20B9{budget.BudgetAmount:N2}. Current spending: \u20B9{currentSpending:N2}");
         }
         else if (utilization >= 0.8m)
         {
             await alertService.ValidateAndCreateAlertAsync(userId, budget.BudgetId, AlertType.WARNING_80, 
-                $"Warning: You have utilized {utilization:P2} of your {scope} budget. Current spending: {currentSpending:C}");
+                $"Warning: You have utilized {utilization:P2} of your {scope} budget. Current spending: \u20B9{currentSpending:N2}");
         }
 
         if (!categoryId.HasValue)
@@ -93,7 +93,7 @@ public class BudgetService(
             if (prediction != null && (prediction.IsBudgetLikelyToBeExceeded || prediction.PredictedMonthlySpending > budget.BudgetAmount))
             {
                 await alertService.ValidateAndCreateAlertAsync(userId, budget.BudgetId, AlertType.PREDICTIVE, 
-                    $"Forecast Warning: Projected spending ({prediction.PredictedMonthlySpending:C}) exceeds your budget of {budget.BudgetAmount:C}.");
+                    $"Forecast Warning: Projected spending (\u20B9{prediction.PredictedMonthlySpending:N2}) exceeds your budget of \u20B9{budget.BudgetAmount:N2}.");
             }
         }
     }
@@ -110,7 +110,7 @@ public class BudgetService(
         if (budget == null)
         {
             budgetStatus.ActiveAlerts.Add("No overall budget set for the current month.");
-            budgetStatus.Prediction = await FetchSpendingPredictionAsync(userId);
+            budgetStatus.Prediction = await FetchSpendingPredictionAsync(userId, null);
             return budgetStatus;
         }
 
@@ -118,9 +118,29 @@ public class BudgetService(
 
         await CheckBudgetThresholdsAsync(userId, null, DateOnly.FromDateTime(now));
 
-        var alerts = await alertService.GetUnreadAlertsAsync(userId);
-        budgetStatus.ActiveAlerts.AddRange(alerts.Select(a => $"[{a.AlertType}] {a.Message}"));
-        budgetStatus.Prediction = await FetchSpendingPredictionAsync(userId);
+        // Live evaluation: alerts are recomputed from CURRENT spending and
+        // budget on every request, so they appear/disappear immediately
+        // when expenses or budgets change.
+        var spentThisMonth = await expenseRepo.GetTotalSpentAsync(
+            userId, null, now.Month, now.Year);
+
+        if (budget.BudgetAmount > 0)
+        {
+            var utilizationPct = spentThisMonth / budget.BudgetAmount * 100;
+
+            if (utilizationPct >= 100)
+            {
+                budgetStatus.ActiveAlerts.Add(
+                    $"Critical: You have exceeded your monthly budget. Spent \u20B9{spentThisMonth:N2} of \u20B9{budget.BudgetAmount:N2}.");
+            }
+            else if (utilizationPct >= 80)
+            {
+                budgetStatus.ActiveAlerts.Add(
+                    $"Warning: You have utilized {utilizationPct:P2} of your monthly budget. Remaining: \u20B9{budget.BudgetAmount - spentThisMonth:N2}.");
+            }
+        }
+
+        budgetStatus.Prediction = await FetchSpendingPredictionAsync(userId, budget);
 
         return budgetStatus;
     }
@@ -140,21 +160,57 @@ public class BudgetService(
         };
     }
 
-    private async Task<SpendingPredictionDto?> FetchSpendingPredictionAsync(int userId)
+    private async Task<SpendingPredictionDto?> FetchSpendingPredictionAsync(int userId, Budget? budget = null)
     {
+        SpendingPredictionDto? remote = null;
+
         try
         {
             var response = await _httpClient.GetAsync($"Prediction/{userId}");
+
             if (response.IsSuccessStatusCode)
             {
-                return await response.Content.ReadFromJsonAsync<SpendingPredictionDto>();
+                remote = await response.Content.ReadFromJsonAsync<SpendingPredictionDto>();
             }
-            logger.LogWarning("Failed to retrieve prediction for user {UserId}. Status Code: {StatusCode}", userId, response.StatusCode);
+            else
+            {
+                logger.LogWarning("Prediction API returned {StatusCode} for user {UserId}. Using local estimate.",
+                    response.StatusCode, userId);
+            }
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "HTTP Request to Prediction API failed.");
+            logger.LogWarning(ex, "Prediction API unreachable for user {UserId}. Using local estimate.", userId);
         }
-        return null;
+
+        return remote ?? await BuildLocalEstimateAsync(userId, budget);
+    }
+
+    // Velocity-based projection computed from the user's REAL expenses:
+    // (spent so far this month / days elapsed) x days in month.
+    private async Task<SpendingPredictionDto> BuildLocalEstimateAsync(int userId, Budget? budget)
+    {
+        var now = DateTime.UtcNow;
+
+        var spentSoFar = await expenseRepo.GetTotalSpentAsync(userId, null, now.Month, now.Year);
+
+        var daysElapsed = now.Day;
+        var daysInMonth = DateTime.DaysInMonth(now.Year, now.Month);
+
+        var projected = daysElapsed > 0
+            ? Math.Round(spentSoFar / daysElapsed * daysInMonth, 2)
+            : 0m;
+
+        var monthlyBudget = budget?.BudgetAmount ?? 0m;
+
+        return new SpendingPredictionDto
+        {
+            PredictedMonthlySpending = projected,
+            MonthlyBudget = monthlyBudget > 0 ? monthlyBudget : null,
+            IsBudgetLikelyToBeExceeded = monthlyBudget > 0 && projected > monthlyBudget,
+            Message = spentSoFar > 0
+                ? $"Velocity-based estimate: \u20B9{spentSoFar:N2} spent in {daysElapsed} day(s), projected to \u20B9{projected:N2} by month end."
+                : "Add at least one expense this month to see a forecast."
+        };
     }
 }

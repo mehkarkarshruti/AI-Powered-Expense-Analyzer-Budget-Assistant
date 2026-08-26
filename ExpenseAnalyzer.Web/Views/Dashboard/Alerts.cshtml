@@ -17,7 +17,8 @@
         {
             @foreach (var alert in alerts)
             {
-                <div class="dashboard-alert warning-alert">
+                var isCritical = alert.StartsWith("Critical", StringComparison.OrdinalIgnoreCase);
+                <div class="dashboard-alert @(isCritical ? "danger-alert" : "warning-alert")">
                     <div class="dashboard-alert-icon">!</div>
 
                     <div>
