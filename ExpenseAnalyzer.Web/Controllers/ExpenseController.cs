@@ -58,7 +58,16 @@ public class ExpenseController : Controller
             return Unauthorized();
         }
 
-        var response = await client.GetAsync("expenses");
+        HttpResponseMessage response;
+
+        try
+        {
+            response = await client.GetAsync("expenses");
+        }
+        catch
+        {
+            return StatusCode(503, new { message = "Service starting up." });
+        }
 
         if (HandleAuthFailure(response))
         {

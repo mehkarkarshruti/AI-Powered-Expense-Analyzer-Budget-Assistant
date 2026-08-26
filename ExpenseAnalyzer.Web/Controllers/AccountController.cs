@@ -41,7 +41,17 @@ public class AccountController : Controller
 
         var client = _httpClientFactory.CreateClient("Api");
 
-        var response = await client.PostAsJsonAsync("auth/login", new { email, password });
+        HttpResponseMessage response;
+
+        try
+        {
+            response = await client.PostAsJsonAsync("auth/login", new { email, password });
+        }
+        catch
+        {
+            ViewBag.Error = "The service is starting up. Please wait a moment and try again.";
+            return View();
+        }
 
         if (!response.IsSuccessStatusCode)
         {
@@ -85,7 +95,17 @@ public class AccountController : Controller
 
         var client = _httpClientFactory.CreateClient("Api");
 
-        var response = await client.PostAsJsonAsync("auth/register", new { name, email, password });
+        HttpResponseMessage response;
+
+        try
+        {
+            response = await client.PostAsJsonAsync("auth/register", new { name, email, password });
+        }
+        catch
+        {
+            ViewBag.Error = "The service is starting up. Please wait a moment and try again.";
+            return View();
+        }
 
         if (!response.IsSuccessStatusCode)
         {

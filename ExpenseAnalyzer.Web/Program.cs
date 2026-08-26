@@ -8,6 +8,8 @@ builder.Services.AddHttpClient("Api", client =>
 {
     client.BaseAddress = new Uri(
         builder.Configuration["ApiBaseUrl"] ?? "http://localhost:5240/api/");
+    // Cloud APIs on free tiers can take ~60s to wake from sleep.
+    client.Timeout = TimeSpan.FromSeconds(120);
 });
 
 // Session for auth state (JWT kept server-side, never exposed to the browser)
