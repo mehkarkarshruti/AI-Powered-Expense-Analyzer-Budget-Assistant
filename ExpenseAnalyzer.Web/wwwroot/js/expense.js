@@ -265,7 +265,7 @@ async function saveExpense(event) {
 
     if (editingId) {
 
-        response = await apiFetch(`/Expense/Update/${editingId}`, {
+        response = await apiFetch(`/Expense/Update/${Number(editingId)}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
@@ -297,13 +297,15 @@ async function saveExpense(event) {
 
 async function editExpense(id) {
 
-    const expense = expenses.find(item => item.id === id);
+    const numericId = Number(id);
+    const expense = expenses.find(item => item.id === numericId);
 
     if (!expense) {
+        await loadExpenses();
         return;
     }
 
-    editingId = id;
+    editingId = numericId;
 
     document.getElementById("modalTitle").textContent =
         "Edit Expense";
@@ -327,9 +329,11 @@ async function editExpense(id) {
 
 async function deleteExpense(id) {
 
-    const expense = expenses.find(item => item.id === id);
+    const numericId = Number(id);
+    const expense = expenses.find(item => item.id === numericId);
 
     if (!expense) {
+        await loadExpenses();
         return;
     }
 
@@ -342,7 +346,7 @@ async function deleteExpense(id) {
         return;
     }
 
-    const response = await apiFetch(`/Expense/Delete/${id}`, {
+    const response = await apiFetch(`/Expense/Delete/${Number(id)}`, {
         method: "DELETE"
     });
 
